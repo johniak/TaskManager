@@ -67,7 +67,7 @@ public class Task extends Model {
 	 * Retrieve todo tasks for the user.
 	 */
 	public static List<Task> findTodoInvolving(String user) {
-		return find.fetch("project").where().eq("status",Task.STATUS_DONE).eq("user.id", user).findList();
+		return find.fetch("project").where().eq("status",Task.STATUS_WAITING).eq("user.id", user).findList();
 	}
 
 	/**
@@ -76,7 +76,10 @@ public class Task extends Model {
 	public static List<Task> findByProject(Long project) {
 		return Task.find.where().eq("project.id", project).findList();
 	}
-
+	
+	public static List<Task> findByUser(Long user) {
+		return Task.find.where().eq("user_id", user).findList();
+	}
 	/**
 	 * Remove task
 	 */
@@ -91,14 +94,7 @@ public class Task extends Model {
 		Ebean.createSqlUpdate("delete from task where project_id = :project").setParameter("project", project).execute();
 	}
 
-	/**
-	 * Rename a folder
-	 */
-	public static String renameProject(Long project, String newName) {
-		Ebean.createSqlUpdate("update task set folder = :newName where project_id = :project").setParameter("newName", newName)
-				.setParameter("project", project).execute();
-		return newName;
-	}
+
 
 	/**
 	 * Create a task

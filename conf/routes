@@ -4,14 +4,14 @@
 
 # Home page
 GET     /                           		controllers.Application.index()
-GET     /login                              controllers.Application.login()
+GET     /login                             controllers.Application.login()
 POST    /login                              controllers.Application.authenticate()
 GET     /register                           controllers.Application.register()
 POST    /register                           controllers.Application.registerPost()
 
 #task 
-
-GET    /projects/:project/tasks            controllers.Tasks.getByProject(project: Long)
+GET		/tasks					            controllers.Tasks.getByUser()
+GET    	/projects/:project/tasks			controllers.Tasks.getByProject(project: Long)
 POST	/projects/:project/tasks			controllers.Tasks.add(project: Long)
 
 #project
