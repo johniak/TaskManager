@@ -22,7 +22,7 @@ import com.ning.http.util.Base64;
 public class User extends Model {
 
 	@Id
-	public int id;
+	public Long id;
     
     @Constraints.Required
     @Formats.NonEmpty
@@ -48,7 +48,7 @@ public class User extends Model {
     public Date updated;
     // -- Queries
     
-    public static Model.Finder<String,User> find = new Model.Finder(String.class, User.class);
+    public static Model.Finder<Long,User> find = new Model.Finder(Long.class, User.class);
     
     /**
      * Retrieve all users.
@@ -70,7 +70,7 @@ public class User extends Model {
     public static User authenticate(String username, String password) {
         return find.where()
             .eq("username", username)
-            .eq("password", password)
+            .eq("password", passwordHash(password))
             .findUnique();
     }
     
