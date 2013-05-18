@@ -26,5 +26,8 @@ DELETE	/projects/:project/tasks/:task			controllers.Tasks.delete(project: Long,t
 GET     /projects/		            		controllers.Projects.getAll()
 POST     /projects/		            		controllers.Projects.add()
 
+#user
+PUT 	/user								controllers.Application.updateUser() 
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

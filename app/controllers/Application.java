@@ -1,6 +1,9 @@
 package controllers;
 
 import static play.data.Form.form;
+
+import java.util.Date;
+
 import controllers.Projects.ProjectForm;
 import models.Project;
 import models.User;
@@ -37,22 +40,53 @@ public class Application extends Controller {
 			if (!username.matches("^[a-zA-Z0-9]{4,20}$")) {
 				return "Invalid username. Must be 4 to 20 length and might use only alphanumeric characters";
 			}
-			if(password.compareTo(rePassword)!=0){
-				return "Passwords don't match";				
+			if (password.compareTo(rePassword) != 0) {
+				return "Passwords don't match";
 			}
 			if (!password.matches(".{4,20}")) {
 				return "Invalid password. Must be 4 to 25 length";
 			}
-			if (!email
-					.matches("^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,3})$")) {
+			if (!email.matches("^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,3})$")) {
 				return "Invalid email";
 			}
-			User user=User.Register(username, password, email);
+			User user = User.Register(username, password, email);
 			if (user == null) {
 				return "login or email exist";
 			}
 			Project project = new Project("Home", user);
 			project.save();
+			return null;
+		}
+	}
+
+	public static class UpdateUser {
+		public String email;
+		public String password;
+		public String rePassword;
+		public String oldPassword;
+
+		public String validate() {
+			System.out.println("|"+password+"|");
+			User user = Secured.getUser();
+			if(User.passwordHash(oldPassword).compareTo(user.password)!=0)
+				return "Wrong password";
+			if (password.compareTo(rePassword) != 0) {
+				return "Passwords don't match";
+			}
+			if (!password.isEmpty()&&!password.matches(".{4,20}")) {
+				return "Invalid password. Must be 4 to 25 length";
+			}
+			if (!email.matches("^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,3})$")) {
+				return "Invalid email";
+			}
+			if (password.compareTo(rePassword)!=0) {
+				return "Passwords are not same";
+			}
+
+			
+			if (User.passwordHash(password).compareTo(oldPassword)==0) {
+				return "Can't set the same password";
+			}
 			return null;
 		}
 	}
@@ -77,12 +111,13 @@ public class Application extends Controller {
 			return redirect(routes.Application.dashboard());
 		}
 	}
-	
+
 	/**
 	 * Handle register form submission.
+	 * 
 	 * @return
 	 */
-	public static Result registerPost(){
+	public static Result registerPost() {
 		Form<Register> registerForm = form(Register.class).bindFromRequest();
 		if (registerForm.hasErrors()) {
 			return badRequest(register.render(registerForm));
@@ -90,7 +125,7 @@ public class Application extends Controller {
 			return redirect(routes.Application.login());
 		}
 	}
-	
+
 	/**
 	 * Login page.
 	 */
@@ -99,7 +134,6 @@ public class Application extends Controller {
 		return ok(register.render(form(Register.class)));
 	}
 
-	
 	public static Result index() {
 		return ok(index.render());
 	}
@@ -112,6 +146,22 @@ public class Application extends Controller {
 	@Security.Authenticated(Secured.class)
 	public static Result dashboardWeek() {
 		return dashboardDisplay(null, "week");
+	}
+
+	@Security.Authenticated(Secured.class)
+	public static Result updateUser() {
+		Form<UpdateUser> userUpdateForm = form(UpdateUser.class).bindFromRequest();
+		if(userUpdateForm.hasErrors()){
+			return forbidden(userUpdateForm.globalError().message());
+		}
+		User user = Secured.getUser();
+		user.updated=new Date();
+		user.mail=userUpdateForm.get().email;
+		if(!userUpdateForm.get().password.isEmpty()){
+			user.password=User.passwordHash(userUpdateForm.get().password);
+		}
+		user.save();
+		return ok();
 	}
 
 	@Security.Authenticated(Secured.class)

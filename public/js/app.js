@@ -11,7 +11,9 @@ $(function() {
 		e.preventDefault();
 		return false;
 	});
-
+	
+	
+	
 	$("#add-project-modal input").keypress(function(e) {
 	    if(e.which == 13) {
 	        $("#add-project-modal-save").click();
@@ -40,4 +42,33 @@ $(function() {
 			appView.closeDetails();
 		}
 	});
+	
+	// manage user - display modal
+	$("#show-manage-user-modal-button").click(function(e) {
+		$("#manage-profile-modal .error").hide();
+		$("#manage-profile-modal").modal('show');
+		e.preventDefault();
+		return false;
+	});
+	
+	$("#manage-user-modal-save").click(function(e) {
+		var formData = $('#manag-user-form').serialize();
+		console.log(formData);
+        $.ajax({
+                url: '/user',
+                type: 'PUT',
+                data: formData,
+                success: function (response) {
+                	console.log("ssss");
+                    $('#manage-profile-modal').modal('hide');
+                },
+                error: function (response) {
+               	 	$("#manage-profile-modal .error").text(response.responseText);
+					$("#manage-profile-modal .error").show();
+                }
+        });
+		e.preventDefault();
+		return false;
+	});
+	
 });

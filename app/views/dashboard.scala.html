@@ -52,7 +52,7 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Manage</a></li>
+                        <li><a href="#" id="show-manage-user-modal-button">Manage</a></li>
                         <li class="divider"></li>
                         <li><a href="/">Logout</a></li>
                     </ul>
@@ -178,6 +178,26 @@
   </div>
   <div class="modal-footer">
     <a id="add-project-modal-save" href="#" class="btn btn-primary">Add project</a>
+  </div>
+</div>
+
+
+<div id="manage-profile-modal" class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-keyboard="true" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Profile manage</h3>
+  </div>
+  <div class="modal-body">
+    <div class="alert alert-error error"></div>
+        <form id="manag-user-form">
+          <input type="email" name="email" class="input-block-level" placeholder="email" value="@user.mail">
+          <input type="password" name="password" class="input-block-level" placeholder="New password (leave empty if not changing)">
+          <input type="password" name="rePassword" class="input-block-level" placeholder="Retype new password (leave empty if not changing)">
+          <input type="password" name="oldPassword" class="input-block-level" placeholder="Actual password">
+        </form>
+  </div>
+  <div class="modal-footer">
+    <a id="manage-user-modal-save" href="#" class="btn btn-primary">Update profile</a>
   </div>
 </div>
 
