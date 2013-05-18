@@ -50,7 +50,7 @@ public class Project extends Model {
     
 	public static void removeProject(Long project){
 		Task.deleteInProject(project);
-		Ebean.createSqlUpdate("delete from project where project_id = :project").setParameter("project", project).execute();
+		find.ref(project).delete();
 	}
 	/**
 	 * Rename a project
