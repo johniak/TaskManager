@@ -61,7 +61,41 @@ public class Tasks extends Controller {
 			return ok(result);
 		}
 	}
+	public static Result update(Long project,Long task) {
+		System.out.println(project);
+		User user = Secured.getUser();
+		if (!Secured.isOwnerOfProject(project, user.id)) {
+			return forbidden();
+		}
+		Form<TaskForm> taskForm = form(TaskForm.class).bindFromRequest();
+		if (taskForm.hasErrors()) {
+			return badRequest();
+		}
+		Task taskR;
+		try {
+			taskR = Task.find.ref(task);
+			taskR.message=taskForm.get().message;
+			taskR.deadline=new SimpleDateFormat("dd/mm/yyyy").parse(taskForm.get().deadline);
+			taskR.priority=taskForm.get().priority;
+			taskR.status=taskForm.get().status;
+			taskR.message=taskForm.get().message;
+			taskR.updated=new Date();
+			taskR.save();
 
+			JsonNode result = Json.toJson(new TaskSafe(taskR.id, taskR.project.id, taskR.priority, taskR.message, taskR.status,new SimpleDateFormat("MM/dd/yyyy").format(taskR.deadline)));
+			return ok(result);
+		} catch (ParseException e) {
+			JsonNode result = Json.toJson(Boolean.FALSE);
+			return ok(result);
+		}
+	}
+	public static Result delete(Long project,Long task) {
+		Task taskR = Task.find.ref(task);
+		taskR.delete();
+		JsonNode result = Json.toJson(Boolean.TRUE);
+		return ok(result);
+	}
+	
 	public static Result getAll() {
 		User user = Secured.getUser();
 

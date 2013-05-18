@@ -14,11 +14,13 @@ GET     /register                           controllers.Application.register()
 POST    /register                           controllers.Application.registerPost()
 
 #task 
-GET    /projects/:project/tasks            controllers.Tasks.getByProject(project: Long)
-GET    /projects/all/tasks            		controllers.Tasks.getAll()
-GET		/tasks					            controllers.Tasks.getByUser()
-GET    	/projects/:project/tasks			controllers.Tasks.getByProject(project: Long)
-POST	/projects/:project/tasks			controllers.Tasks.add(project: Long)
+GET		/projects/:project/tasks				controllers.Tasks.getByProject(project: Long)
+GET		/projects/all/tasks            			controllers.Tasks.getAll()
+GET		/tasks					        	    controllers.Tasks.getByUser()
+GET    	/projects/:project/tasks				controllers.Tasks.getByProject(project: Long)
+POST	/projects/:project/tasks				controllers.Tasks.add(project: Long)
+PUT		/projects/:project/tasks/:task			controllers.Tasks.update(project: Long,task: Long)
+DELETE	/projects/:project/tasks/:task			controllers.Tasks.delete(project: Long,task: Long)
 
 #project
 GET     /projects/		            		controllers.Projects.getAll()
