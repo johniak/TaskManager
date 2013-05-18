@@ -19,6 +19,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import play.mvc.Http.Context;
+import views.html.helper.ProjectDisplay;
 
 @Security.Authenticated(Secured.class)
 public class Projects extends Controller {
@@ -39,19 +40,17 @@ public class Projects extends Controller {
 		return ok(result);
 	}
 
-	public static List<Project> getUserProjects() {
+	public static List<ProjectDisplay> getUserProjects() {
 		User user = Secured.getUser();
+
 		return Project.getAllProjectsByUserId(user.id);
 	}
 
 	public static Result getAll() {
 
 		User user = Secured.getUser();
-		List<Project> projectsUnsafe = Project.getAllProjectsByUserId(user.id);
-		List<ProjectSafe> projects=new ArrayList<ProjectSafe>();
-		for(Project p :projectsUnsafe){
-			projects.add(new ProjectSafe(p.id,p.name,p.user.id));
-		}
+		List<ProjectDisplay> projects = Project.getAllProjectsByUserId(user.id);
+	
 		JsonNode result = Json.toJson(projects);
 		return ok(result);
 	}

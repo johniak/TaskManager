@@ -57,8 +57,8 @@ public class Task extends Model {
 	public final static int PRIORITY_HIGH=2;
 	
 
-	public final static int STATUS_DONE=0;
-	public final static int STATUS_WAITING=1;
+	public final static int STATUS_DONE=1;
+	public final static int STATUS_WAITING=0;
 	
 
 	public static Model.Finder<Long, Task> find = new Model.Finder(Long.class, Task.class);
@@ -67,7 +67,8 @@ public class Task extends Model {
 	 * Retrieve todo tasks for the user.
 	 */
 	public static List<Task> findAll(Long user_id) {
-		return Task.find.where().eq("status",Task.STATUS_WAITING).eq("user.id", user_id).findList();
+		//eq("status",Task.STATUS_WAITING)
+		return Task.find.where().eq("user.id", user_id).findList();
 	}
 
 	/**

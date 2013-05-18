@@ -10,6 +10,10 @@ body {
 	z-index: 9999;
 }
 
+.badge {
+	float: right;
+}
+
 .alert-message {
 	position: relative;
 	text-align: center;

@@ -1,5 +1,4 @@
-
-@(user: User, projects: List[Project], selected_project: Integer, global: String)
+@(user: User, projects: List[views.html.helper.ProjectDisplay], selected_project: Integer, global: String)
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -79,7 +78,7 @@
                     }else{
                         <li >
                     }
-                    <a href="/dashboard/all">All Tasks <span class="badge">10</span></a></a></li>
+                    <a href="/dashboard/all">All Tasks</a></a></li>
 
                     @if(global == "week") {
                         <li class="active">
@@ -98,7 +97,7 @@
                         }else{
                             <li >
                         }
-                        <a href="/dashboard/@project.id">@project.name</a></li>
+                        <a href="/dashboard/@project.id">@project.name @if(project.count>0){<span class="badge">@project.count</span>}</a></li>
                     }
                 </ul>
                 <hr class="add-project">

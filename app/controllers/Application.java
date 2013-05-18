@@ -12,6 +12,7 @@ import play.data.Form;
 import play.mvc.*;
 import views.*;
 import views.html.*;
+import views.html.helper.ProjectDisplay;
 
 public class Application extends Controller {
 
