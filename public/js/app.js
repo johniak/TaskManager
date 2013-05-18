@@ -58,6 +58,7 @@ $(function() {
                 data: formData,
                 success: function (response) {
                     $('#manage-profile-modal').modal('hide');
+                    tools.alert("success", "Account data has been changed.");
                 },
                 error: function (response) {
                	 	$("#manage-profile-modal .error").text(response.responseText);

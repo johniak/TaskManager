@@ -108,7 +108,7 @@ public class Application extends Controller {
 			return badRequest(login.render(loginForm));
 		} else {
 			session("username", loginForm.get().username);
-			return redirect(routes.Application.dashboard());
+			return redirect(routes.Application.dashboard()+"#message/success/Welcome "+loginForm.get().username+".");
 		}
 
 	}

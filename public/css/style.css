@@ -2,6 +2,10 @@ body {
 	background-color: #f5f5f5;
 }
 
+small {
+	font-size: 13px;
+}
+
 #alert-area {
 	position: fixed;
 	top: 30px;
