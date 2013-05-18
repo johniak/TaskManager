@@ -61,6 +61,7 @@ public class Tasks extends Controller {
 			return ok(result);
 		}
 	}
+	
 	public static Result update(Long project,Long task) {
 		System.out.println(project);
 		User user = Secured.getUser();
@@ -82,13 +83,14 @@ public class Tasks extends Controller {
 			taskR.updated=new Date();
 			taskR.save();
 
-			JsonNode result = Json.toJson(new TaskSafe(taskR.id, taskR.project.id, taskR.priority, taskR.message, taskR.status,new SimpleDateFormat("MM/dd/yyyy").format(taskR.deadline)));
+			JsonNode result = Json.toJson(new TaskSafe(taskR.id, taskR.project.id, taskR.priority, taskR.message, taskR.status,new SimpleDateFormat("dd/mm/yyyy").format(taskR.deadline)));
 			return ok(result);
 		} catch (ParseException e) {
 			JsonNode result = Json.toJson(Boolean.FALSE);
 			return ok(result);
 		}
 	}
+	
 	public static Result delete(Long project,Long task) {
 		Task taskR = Task.find.ref(task);
 		taskR.delete();
@@ -102,7 +104,7 @@ public class Tasks extends Controller {
 		List<Task> tasks= Task.findAll(user.id);
 		List<TaskSafe> tasksSafe= new ArrayList<TaskSafe>();
 		for(Task t : tasks){
-			tasksSafe.add(new TaskSafe(t.id, t.project.id, t.priority, t.message, t.status,new SimpleDateFormat("MM/dd/yyyy").format(t.deadline)));
+			tasksSafe.add(new TaskSafe(t.id, t.project.id, t.priority, t.message, t.status,new SimpleDateFormat("dd/mm/yyyy").format(t.deadline)));
 		}
 		JsonNode result = Json.toJson(tasksSafe);
 		return ok(result);
@@ -116,7 +118,7 @@ public class Tasks extends Controller {
 		List<Task> tasks= Task.findByProject(project);
 		List<TaskSafe> tasksSafe= new ArrayList<TaskSafe>();
 		for(Task t : tasks){
-			tasksSafe.add(new TaskSafe(t.id, t.project.id, t.priority, t.message, t.status,new SimpleDateFormat("MM/dd/yyyy").format(t.deadline)));
+			tasksSafe.add(new TaskSafe(t.id, t.project.id, t.priority, t.message, t.status,new SimpleDateFormat("dd/mm/yyyy").format(t.deadline)));
 		}
 		JsonNode result = Json.toJson(tasksSafe);
 		return ok(result);

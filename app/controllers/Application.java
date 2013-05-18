@@ -1,6 +1,8 @@
 package controllers;
 
 import static play.data.Form.form;
+import controllers.Projects.ProjectForm;
+import models.Project;
 import models.User;
 import play.*;
 import play.data.Form;
@@ -45,9 +47,12 @@ public class Application extends Controller {
 					.matches("^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,3})$")) {
 				return "Invalid email";
 			}
-			if (User.Register(username, password, email) == null) {
+			User user=User.Register(username, password, email);
+			if (user == null) {
 				return "login or email exist";
 			}
+			Project project = new Project("Home", user);
+			project.save();
 			return null;
 		}
 	}
@@ -78,7 +83,6 @@ public class Application extends Controller {
 	 * @return
 	 */
 	public static Result registerPost(){
-		User.Register("aa", "bb", "cc");
 		Form<Register> registerForm = form(Register.class).bindFromRequest();
 		if (registerForm.hasErrors()) {
 			return badRequest(register.render(registerForm));
