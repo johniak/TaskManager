@@ -17,9 +17,9 @@ $(function( $ ) {
 		events: {
 			'keypress #add-task-input': 'keyPress',
 			'click #add-task-button': 'addTask',
-			'click .close': 'closeDetails',
-			'click .delete': 'deleteSelected',
-			'click .save': 'saveSelected',
+			'click #details .close': 'closeDetails',
+			'click #details .delete': 'deleteSelected',
+			'click #details .save': 'saveSelected',
 		},
 
 		// At initialization we bind to the relevant events on the `Todos`
@@ -76,7 +76,12 @@ $(function( $ ) {
 			this.selected.model.set('message', message);
 			this.selected.model.set('deadline', deadline);
 			this.selected.model.set('priority', priority);
-			this.selected.model.save();
+			this.selected.model.save(null, {
+				success: function() {
+					tools.alert("success", "Your tasks has be saved!");
+				}, error: function() {
+					tools.alert("error", "Server error.");
+			}});
 			this.closeDetails();
 		},
 
@@ -129,7 +134,15 @@ $(function( $ ) {
 				message: this.input.val(),
 				status: 0,
 				deadline: date_string
-			} );
+			}, { 
+			success: function(model) {
+				tools.alert("success", "Your tasks has be saved!");
+				appView.select(model.toJSON(), model.view);
+			},
+			error: function(model) {
+				tools.alert("error", "Server error.");
+				model.clear();
+			}});
 
 			this.input.val('');
 		},

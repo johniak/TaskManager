@@ -66,6 +66,8 @@
     </div>
 </div>
 
+<div id="alert-area"></div>
+
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span2">
@@ -106,13 +108,6 @@
             </div><!--/.well -->
         </div><!--/span-->
         <div class="span6">
-
-            @if(flash.contains("success")) {
-                <div class="alert alert-success">
-                    @flash.get("success")
-                </div>
-            }
-
             
          <div class="well input-append">
             <input id="add-task-input" type="text" placeholder="Enter your task here" autofocus="autofocus">

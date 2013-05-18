@@ -28,3 +28,8 @@ tools.formatDate = function(date) {
 
     return strDate;
 }
+
+tools.alert = function(type, message) {
+    $("#alert-area").append($("<div class='alert-message alert alert-" + type + " fade in' data-alert='alert'> <button type='button' class='close' data-dismiss='alert'>&times;</button> " + message + " </div>"));
+    $(".alert-message").delay(2000).fadeOut("slow", function () { $(this).remove(); });
+}
