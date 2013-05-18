@@ -30,9 +30,7 @@ $(function() {
 				$("#add-project-modal .error").show();
 				return false;
 			}
-			console.log(response);
-			window.response = response;
-			document.location.href = "/dashboard/"+response.id;
+			document.location.href = "/dashboard/"+response.id+"#message/success/Project has been added.";
 		});
 	});
 
@@ -59,12 +57,26 @@ $(function() {
                 type: 'PUT',
                 data: formData,
                 success: function (response) {
-                	console.log("ssss");
                     $('#manage-profile-modal').modal('hide');
                 },
                 error: function (response) {
                	 	$("#manage-profile-modal .error").text(response.responseText);
 					$("#manage-profile-modal .error").show();
+                }
+        });
+		e.preventDefault();
+		return false;
+	});
+
+	$(".delete-project").click(function(e) {
+        $.ajax({
+                url: '/projects/'+window.tasks_url,
+                type: 'DELETE',
+                success: function (response) {
+                	document.location.href = "/dashboard/all#message/success/Project has been deleted.";
+                },
+                error: function (response) {
+               	 	tools.alert("error", "Server error.");
                 }
         });
 		e.preventDefault();

@@ -10,6 +10,7 @@ var appView = null;
 	var AppRouter = Backbone.Router.extend({
         routes: {
             "task/:id": "getTask",
+            "message/:type/:message": "message",
             "": "defaultRoute" // Backbone will try match the route above first
         },
         initialize: function(){
@@ -28,6 +29,17 @@ var appView = null;
             });
         });
     });
+
+    app.TodoRouter.on('route:message', function (type, message) {
+        if(message != undefined && type != undefined) {
+            tools.alert(type, message);
+            document.location.hash = "";
+        }
+        requirejs(["/assets/js/views/app.js"], function() {
+            appView = new app.AppView();
+        });
+    });
+
     app.TodoRouter.on('route:defaultRoute', function (actions) {
         requirejs(["/assets/js/views/app.js"], function() {
             appView = new app.AppView();
