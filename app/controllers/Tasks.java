@@ -26,6 +26,8 @@ import play.mvc.Result;
 import play.mvc.Security;
 import play.mvc.Http.Context;
 
+import util.*;
+
 @Security.Authenticated(Secured.class)
 public class Tasks extends Controller {
 
@@ -39,12 +41,13 @@ public class Tasks extends Controller {
 
 		public String deadline;
 	}
-	
+
 	public static Result addAll() {
 		User user = Secured.getUser();
 		Long project_home = Project.getAllProjectsByUserId(user.id).get(0).id;
 		return add(project_home);
 	}
+
 
 	public static Result add(Long project) {
 		System.out.println(project);
@@ -56,13 +59,31 @@ public class Tasks extends Controller {
 		if (taskForm.hasErrors()) {
 			return badRequest();
 		}
+
+		// process task message
+		String message = taskForm.get().message;
+		String deadline = taskForm.get().deadline;
+		int priority = taskForm.get().priority;
+
+		DateRegExpr dateRX = new DateRegExpr(message);
+		if(dateRX.found()) {
+			message = dateRX.getMessage();
+			deadline = dateRX.getDate();
+		}
+
+		PriorityRegExpr priorityRX = new PriorityRegExpr(message);
+		if(priorityRX.found()) {
+			message = priorityRX.getMessage();
+			priority = priorityRX.getPriority();
+		}
+
 		Task task;
 		try {
-			task = new Task(user, Project.find.ref(project), taskForm.get().priority, taskForm.get().message, taskForm.get().status, new Date(), new Date(),
-					new SimpleDateFormat("dd/MM/yyyy").parse(taskForm.get().deadline));
+			task = new Task(user, Project.find.ref(project), priority, message, taskForm.get().status, new Date(), new Date(),
+				new SimpleDateFormat("dd/MM/yyyy").parse(deadline));
 			task.save();
 
-			JsonNode result = Json.toJson(new TaskSafe(task.id, task.project.id, task.priority, task.message, task.status,new SimpleDateFormat("dd/MM/yyyy").format(task.deadline), task.project.name));
+			JsonNode result = Json.toJson(new TaskSafe(task.id, task.project.id, priority, task.message, task.status, deadline, task.project.name));
 			return ok(result);
 		} catch (ParseException e) {
 			JsonNode result = Json.toJson(Boolean.FALSE);

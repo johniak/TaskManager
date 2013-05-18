@@ -80,6 +80,7 @@ $(function( $ ) {
 					tools.alert("error", "Server error.");
 			}});
 			this.closeDetails();
+
 			app.Todos.sort();
 			appView.addAll();
 
@@ -140,6 +141,8 @@ $(function( $ ) {
 			}, { 
 			success: function(model) {
 				tools.alert("success", "Your task has been saved!");
+				app.Todos.sort();
+				appView.addAll();
 				appView.select(model.toJSON(), model.view);
 			},
 			error: function(model) {
