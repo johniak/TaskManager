@@ -44,6 +44,13 @@ public class Project extends Model {
 		Task.deleteInProject(project);
 		Ebean.createSqlUpdate("delete from project where project_id = :project").setParameter("project", project).execute();
 	}
-    
+	/**
+	 * Rename a project
+	 */
+	public static String renameProject(Long project, String newName) {
+		Ebean.createSqlUpdate("update task set folder = :newName where project_id = :project").setParameter("newName", newName)
+				.setParameter("project", project).execute();
+		return newName;
+	}
     
 }

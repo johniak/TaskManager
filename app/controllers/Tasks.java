@@ -87,6 +87,17 @@ public class Tasks extends Controller {
 		JsonNode result = Json.toJson(tasksSafe);
 		return ok(result);
 	}
+	
+	public static Result getByUser() {
+		User user = Secured.getUser();
+		List<Task> tasks= Task.findByUser(user.id);
+		List<TaskSafe> tasksSafe= new ArrayList<TaskSafe>();
+		for(Task t : tasks){
+			tasksSafe.add(new TaskSafe(t.id, t.project.id, t.priority, t.message, t.status,new SimpleDateFormat("MM/dd/yyyy").format(t.deadline)));
+		}
+		JsonNode result = Json.toJson(tasksSafe);
+		return ok(result);
+	}
 }
 
 class TaskSafe{
