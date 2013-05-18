@@ -1,7 +1,12 @@
 var tools = {};
 
 tools.formatDate = function(date) {
-    MMDD = new Date(date);
+    // expolde date to y,m,d
+    var date_object = date.split("/");
+
+    MMDD = new Date()
+    MMDD.setHours(0, 0, 0, 0);
+    MMDD.setFullYear(date_object[2], date_object[1]-1, date_object[0]);
 
     var strDate = "";
 
