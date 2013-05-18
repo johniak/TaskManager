@@ -12,6 +12,7 @@ GET     /login                             controllers.Application.login()
 POST    /login                              controllers.Application.authenticate()
 GET     /register                           controllers.Application.register()
 POST    /register                           controllers.Application.registerPost()
+GET		/logout								controllers.Application.logout()
 
 #task 
 GET		/tasks					        	    controllers.Tasks.getByUser()
@@ -29,8 +30,9 @@ DELETE	/projects/week/tasks/:task				controllers.Tasks.deleteAll(task: Long)
 DELETE	/projects/:project/tasks/:task			controllers.Tasks.delete(project: Long,task: Long)
 
 #project
-GET      /projects/		            		controllers.Projects.getAll()
-POST     /projects/		            		controllers.Projects.add()
+GET			/projects/		            		controllers.Projects.getAll()
+POST		/projects/		            		controllers.Projects.add()
+DELETE		/projects/:project            		controllers.Projects.delete(project: Long)
 
 #user
 PUT 	/user								controllers.Application.updateUser() 

@@ -67,25 +67,24 @@ public class Application extends Controller {
 		public String oldPassword;
 
 		public String validate() {
-			System.out.println("|"+password+"|");
+			System.out.println("|" + password + "|");
 			User user = Secured.getUser();
-			if(User.passwordHash(oldPassword).compareTo(user.password)!=0)
+			if (User.passwordHash(oldPassword).compareTo(user.password) != 0)
 				return "Wrong password";
 			if (password.compareTo(rePassword) != 0) {
 				return "Passwords don't match";
 			}
-			if (!password.isEmpty()&&!password.matches(".{4,20}")) {
+			if (!password.isEmpty() && !password.matches(".{4,20}")) {
 				return "Invalid password. Must be 4 to 25 length";
 			}
 			if (!email.matches("^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,3})$")) {
 				return "Invalid email";
 			}
-			if (password.compareTo(rePassword)!=0) {
+			if (password.compareTo(rePassword) != 0) {
 				return "Passwords are not same";
 			}
 
-			
-			if (User.passwordHash(password).compareTo(oldPassword)==0) {
+			if (User.passwordHash(password).compareTo(oldPassword) == 0) {
 				return "Can't set the same password";
 			}
 			return null;
@@ -111,6 +110,7 @@ public class Application extends Controller {
 			session("username", loginForm.get().username);
 			return redirect(routes.Application.dashboard());
 		}
+
 	}
 
 	/**
@@ -152,17 +152,26 @@ public class Application extends Controller {
 	@Security.Authenticated(Secured.class)
 	public static Result updateUser() {
 		Form<UpdateUser> userUpdateForm = form(UpdateUser.class).bindFromRequest();
-		if(userUpdateForm.hasErrors()){
+		if (userUpdateForm.hasErrors()) {
 			return forbidden(userUpdateForm.globalError().message());
 		}
 		User user = Secured.getUser();
-		user.updated=new Date();
-		user.mail=userUpdateForm.get().email;
-		if(!userUpdateForm.get().password.isEmpty()){
-			user.password=User.passwordHash(userUpdateForm.get().password);
+		user.updated = new Date();
+		user.mail = userUpdateForm.get().email;
+		if (!userUpdateForm.get().password.isEmpty()) {
+			user.password = User.passwordHash(userUpdateForm.get().password);
 		}
 		user.save();
 		return ok();
+	}
+
+	/**
+	 * Logout and clean the session.
+	 */
+	@Security.Authenticated(Secured.class)
+	public static Result logout() {
+		session().clear();
+		return redirect("/");
 	}
 
 	@Security.Authenticated(Secured.class)

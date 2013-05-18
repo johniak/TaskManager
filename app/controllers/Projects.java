@@ -35,8 +35,8 @@ public class Projects extends Controller {
 		}
 		Project project = new Project(projectForm.get().name, user);
 		project.save();
-		
-		JsonNode result = Json.toJson(new ProjectSafe(project.id,project.name,project.user.id));
+
+		JsonNode result = Json.toJson(new ProjectSafe(project.id, project.name, project.user.id));
 		return ok(result);
 	}
 
@@ -50,19 +50,27 @@ public class Projects extends Controller {
 
 		User user = Secured.getUser();
 		List<ProjectDisplay> projects = Project.getAllProjectsByUserId(user.id);
-	
+
 		JsonNode result = Json.toJson(projects);
 		return ok(result);
 	}
+
+	public static Result delete(Long project) {
+		Project.find.ref(project).delete();
+		return ok();
+	}
+
 }
-class ProjectSafe{
+
+class ProjectSafe {
 	public Long id;
 	public String name;
 	public Long user;
+
 	public ProjectSafe(Long id, String name, Long user) {
 		this.id = id;
 		this.name = name;
 		this.user = user;
 	}
-	
+
 }
