@@ -1,12 +1,7 @@
 var tools = {};
 
 tools.formatDate = function(date) {
-    // expolde date to y,m,d
-    var date_object = date.split("/");
-
-    MMDD = new Date()
-    MMDD.setHours(0, 0, 0, 0);
-    MMDD.setFullYear(date_object[2], date_object[1]-1, date_object[0]);
+    var MMDD = tools.toDate(date);
 
     var strDate = "";
 
@@ -34,7 +29,20 @@ tools.formatDate = function(date) {
     return strDate;
 }
 
+tools.toDate = function(date) {
+    var date_object = date.split("/");
+
+    var MMDD = new Date()
+    MMDD.setHours(0, 0, 0, 0);
+    MMDD.setFullYear(date_object[2], date_object[1]-1, date_object[0]);
+    return MMDD;
+}
+
 tools.alert = function(type, message) {
     $("#alert-area").append($("<div class='alert-message alert alert-" + type + " fade in' data-alert='alert'> <button type='button' class='close' data-dismiss='alert'>&times;</button> " + message + " </div>"));
     $(".alert-message").delay(2000).fadeOut("slow", function () { $(this).remove(); });
+}
+
+tools.isNumber = function(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
 }

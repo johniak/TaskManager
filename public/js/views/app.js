@@ -33,8 +33,8 @@ $(function( $ ) {
 
 			this.listenTo(app.Todos, 'add', this.addAll);
 			this.listenTo(app.Todos, 'reset', this.addAll);
-			this.listenTo(app.Todos, 'change:status', this.filterOne);
-			//this.listenTo(app.Todos, 'all', this.render);
+
+			this.filter = true;
 
 			this.callback = callback;
 			app.Todos.fetch();
@@ -43,13 +43,14 @@ $(function( $ ) {
 		// Re-rendering the App just means refreshing the statistics -- the rest
 		// of the app doesn't change.
 		render: function() {
-			
 		},
 
 		addOne: function( todo ) {
-			var view = new app.TodoView({ model: todo });
-			todo.view = view;
-			$('#task-list').prepend( view.render().el );
+			if( !this.filter || todo.get('status') == 0) {
+				var view = new app.TodoView({ model: todo });
+				todo.view = view;
+				$('#task-list').prepend( view.render().el );
+			}
 		},
 
 		addAll: function() {
@@ -57,10 +58,6 @@ $(function( $ ) {
 			app.Todos.each(this.addOne, this);
 			if(typeof(this.callback) == "function")
         			this.callback(this);
-		},
-
-		filterOne: function( todo ) {
-			todo.trigger('visible');
 		},
 
 		deleteSelected: function() {
@@ -78,11 +75,14 @@ $(function( $ ) {
 			this.selected.model.set('priority', priority);
 			this.selected.model.save(null, {
 				success: function() {
-					tools.alert("success", "Your tasks has be saved!");
+					tools.alert("success", "Your task has been saved!");
 				}, error: function() {
 					tools.alert("error", "Server error.");
 			}});
 			this.closeDetails();
+			app.Todos.sort();
+			appView.addAll();
+
 		},
 
 		select: function( data, item ) {
@@ -96,6 +96,8 @@ $(function( $ ) {
 
 			// set selected id
 			this.selected = item;
+
+			if ( this.selected  == undefined) return;
 
 			// unselect others
 			$(".task.selected").removeClass('selected');
@@ -121,6 +123,7 @@ $(function( $ ) {
 		},
 
 		addTask: function() {
+			if ( this.input.val().length == 0) return;
 			var today =  new Date();
 			today.setHours(0, 0, 0, 0);
 
@@ -136,7 +139,7 @@ $(function( $ ) {
 				deadline: date_string
 			}, { 
 			success: function(model) {
-				tools.alert("success", "Your tasks has be saved!");
+				tools.alert("success", "Your task has been saved!");
 				appView.select(model.toJSON(), model.view);
 			},
 			error: function(model) {

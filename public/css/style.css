@@ -14,6 +14,14 @@ body {
 	float: right;
 }
 
+.display-all {
+	float: right;
+}
+
+.display-all:hover {
+	text-decoration: none;	
+}
+
 .alert-message {
 	position: relative;
 	text-align: center;
@@ -53,6 +61,10 @@ body {
 
 .well.main, .well#details {
 	padding: 9px 0;
+}
+
+.well.main {
+	min-height: 200px;
 }
 
 .hide {

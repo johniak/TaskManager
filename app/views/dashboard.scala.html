@@ -113,7 +113,9 @@
             <button id="add-task-button" class="btn btn-primary" type="button">Add</button>
          </div>
             <div class="well main">
-                <span class="nav-header">Task List</span>
+                <span class="nav-header">Task List
+                    <a  href="#" class="display-all">Display/Hide done</a>
+                </span>
                 <ul id="task-list">
 
                 </ul>
@@ -189,10 +191,10 @@
   <div class="modal-body">
     <div class="alert alert-error error"></div>
         <form id="manag-user-form">
-          <input type="email" name="email" class="input-block-level" placeholder="email" value="@user.mail">
+          <input type="email" name="email" class="input-block-level" placeholder="Email" value="@user.mail">
           <input type="password" name="password" class="input-block-level" placeholder="New password (leave empty if not changing)">
           <input type="password" name="rePassword" class="input-block-level" placeholder="Retype new password (leave empty if not changing)">
-          <input type="password" name="oldPassword" class="input-block-level" placeholder="Actual password">
+          <input type="password" name="oldPassword" class="input-block-level" placeholder="Current password">
         </form>
   </div>
   <div class="modal-footer">
@@ -205,6 +207,9 @@
         <a class="status" href="#"> </a>
         <h4 class="media-heading"><%- message %></h4>
         <p>
+            <% if ( !tools.isNumber(window.tasks_url) ) { %>
+                <span class="label label-inverse"><%- project_name %></span>
+            <% } %>
             <span class="label <%- display_priority_class %>"><%- display_priority_text %></span>
             <span class="label label-date"><%- display_deadline %></span>
         </p>

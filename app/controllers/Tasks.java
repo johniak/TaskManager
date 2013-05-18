@@ -62,7 +62,7 @@ public class Tasks extends Controller {
 					new SimpleDateFormat("dd/MM/yyyy").parse(taskForm.get().deadline));
 			task.save();
 
-			JsonNode result = Json.toJson(new TaskSafe(task.id, task.project.id, task.priority, task.message, task.status,new SimpleDateFormat("dd/MM/yyyy").format(task.deadline)));
+			JsonNode result = Json.toJson(new TaskSafe(task.id, task.project.id, task.priority, task.message, task.status,new SimpleDateFormat("dd/MM/yyyy").format(task.deadline), task.project.name));
 			return ok(result);
 		} catch (ParseException e) {
 			JsonNode result = Json.toJson(Boolean.FALSE);
@@ -96,7 +96,7 @@ public class Tasks extends Controller {
 			taskR.updated=new Date();
 			taskR.save();
 
-			JsonNode result = Json.toJson(new TaskSafe(taskR.id, taskR.project.id, taskR.priority, taskR.message, taskR.status,new SimpleDateFormat("dd/MM/yyyy").format(taskR.deadline)));
+			JsonNode result = Json.toJson(new TaskSafe(taskR.id, taskR.project.id, taskR.priority, taskR.message, taskR.status,new SimpleDateFormat("dd/MM/yyyy").format(taskR.deadline), taskR.project.name));
 			return ok(result);
 		} catch (ParseException e) {
 			JsonNode result = Json.toJson(Boolean.FALSE);
@@ -136,7 +136,7 @@ public class Tasks extends Controller {
 		List<TaskSafe> tasksSafe= new ArrayList<TaskSafe>();
 		for(Task t : tasks){
 			if(t.deadline.compareTo(now) >= 0 && t.deadline.compareTo(week) <= 0) {
-				tasksSafe.add(new TaskSafe(t.id, t.project.id, t.priority, t.message, t.status, new SimpleDateFormat("dd/MM/yyyy").format(t.deadline)));
+				tasksSafe.add(new TaskSafe(t.id, t.project.id, t.priority, t.message, t.status, new SimpleDateFormat("dd/MM/yyyy").format(t.deadline), t.project.name));
 			}
 		}
 		JsonNode result = Json.toJson(tasksSafe);
@@ -149,7 +149,7 @@ public class Tasks extends Controller {
 		List<Task> tasks= Task.findAll(user.id);
 		List<TaskSafe> tasksSafe= new ArrayList<TaskSafe>();
 		for(Task t : tasks){
-			tasksSafe.add(new TaskSafe(t.id, t.project.id, t.priority, t.message, t.status,new SimpleDateFormat("dd/MM/yyyy").format(t.deadline)));
+			tasksSafe.add(new TaskSafe(t.id, t.project.id, t.priority, t.message, t.status,new SimpleDateFormat("dd/MM/yyyy").format(t.deadline), t.project.name));
 		}
 		JsonNode result = Json.toJson(tasksSafe);
 		return ok(result);
@@ -163,7 +163,7 @@ public class Tasks extends Controller {
 		List<Task> tasks= Task.findByProject(project);
 		List<TaskSafe> tasksSafe= new ArrayList<TaskSafe>();
 		for(Task t : tasks){
-			tasksSafe.add(new TaskSafe(t.id, t.project.id, t.priority, t.message, t.status,new SimpleDateFormat("dd/MM/yyyy").format(t.deadline)));
+			tasksSafe.add(new TaskSafe(t.id, t.project.id, t.priority, t.message, t.status,new SimpleDateFormat("dd/MM/yyyy").format(t.deadline), t.project.name));
 		}
 		JsonNode result = Json.toJson(tasksSafe);
 		return ok(result);
@@ -174,7 +174,7 @@ public class Tasks extends Controller {
 		List<Task> tasks= Task.findByUser(user.id);
 		List<TaskSafe> tasksSafe= new ArrayList<TaskSafe>();
 		for(Task t : tasks){
-			tasksSafe.add(new TaskSafe(t.id, t.project.id, t.priority, t.message, t.status,new SimpleDateFormat("dd/MM/yyyy").format(t.deadline)));
+			tasksSafe.add(new TaskSafe(t.id, t.project.id, t.priority, t.message, t.status,new SimpleDateFormat("dd/MM/yyyy").format(t.deadline), t.project.name));
 		}
 		JsonNode result = Json.toJson(tasksSafe);
 		return ok(result);
@@ -186,6 +186,8 @@ class TaskSafe{
 	
 	public Long project;
 
+	public String project_name;
+
 	public int priority;
 
 	public String message;
@@ -194,13 +196,14 @@ class TaskSafe{
 
 	public String deadline;
 
-	public TaskSafe(Long id, Long project, int priority, String message, int status, String deadline) {
+	public TaskSafe(Long id, Long project, int priority, String message, int status, String deadline, String project_name) {
 		this.id = id;
 		this.project = project;
 		this.priority = priority;
 		this.message = message;
 		this.status = status;
 		this.deadline = deadline;
+		this.project_name = project_name;
 	}
 	
 	

@@ -25,7 +25,7 @@ $(function() {
 
 		initialize: function() {
 			this.listenTo(this.model, 'change', this.render);
-			//this.listenTo(this.model, 'destroy', this.clear);
+			this.listenTo(this.model, 'sort', this.render);
 		},
 
 		// Re-render the titles of the todo item.

@@ -18,7 +18,8 @@ var priority = {
 			message: '',
 			deadline: '',
 			priority: 1,
-			status: 0
+			status: 0,
+			project_name: 'Home'
 		},
 
 		getPriorityClass: function() {

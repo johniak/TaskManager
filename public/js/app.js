@@ -53,7 +53,7 @@ $(function() {
 	
 	$("#manage-user-modal-save").click(function(e) {
 		var formData = $('#manag-user-form').serialize();
-		console.log(formData);
+
         $.ajax({
                 url: '/user',
                 type: 'PUT',
@@ -67,6 +67,17 @@ $(function() {
 					$("#manage-profile-modal .error").show();
                 }
         });
+		e.preventDefault();
+		return false;
+	});
+
+	$(".display-all").click(function(e) {
+
+		appView.filter = !appView.filter;
+
+		app.Todos.sort();
+		appView.addAll();
+
 		e.preventDefault();
 		return false;
 	});
