@@ -56,7 +56,7 @@ public class Projects extends Controller {
 	}
 
 	public static Result delete(Long project) {
-		Project.find.ref(project).delete();
+		Project.removeProject(project);
 		return ok();
 	}
 
