@@ -69,7 +69,7 @@ public class Application extends Controller {
 			return badRequest(login.render(loginForm));
 		} else {
 			session("username", loginForm.get().username);
-			return redirect(routes.Application.index());
+			return redirect(routes.Application.dashboard());
 		}
 	}
 	
@@ -97,12 +97,28 @@ public class Application extends Controller {
 
 	
 	public static Result index() {
-		 String s="";
-		for (User u :User.find.all()){
-			s+=u.id+":"+u.username+"\n";
-		}
-		s+="\n";
-		return ok(s);
+		return ok(index.render());
 	}
 
+	@Security.Authenticated(Secured.class)
+	public static Result dashboard() {
+		return dashboardDisplay(null, "all");
+	}
+
+	@Security.Authenticated(Secured.class)
+	public static Result dashboardWeek() {
+		return dashboardDisplay(null, "week");
+	}
+
+	@Security.Authenticated(Secured.class)
+	public static Result dashboardProject(Integer project_id) {
+		return dashboardDisplay(project_id, null);
+	}
+
+	@Security.Authenticated(Secured.class)
+	public static Result dashboardDisplay(Integer project_id, String global) {
+		User logged_user = User.findByUsername(request().username());
+
+		return ok(dashboard.render(logged_user, Projects.getUserProjects(), project_id, global));
+	}
 }

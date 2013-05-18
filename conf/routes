@@ -4,6 +4,10 @@
 
 # Home page
 GET     /                           		controllers.Application.index()
+GET     /dashboard                          controllers.Application.dashboard()
+GET     /dashboard/all                      controllers.Application.dashboard()
+GET     /dashboard/week                     controllers.Application.dashboardWeek()
+GET     /dashboard/:project                 controllers.Application.dashboardProject(project: Integer)
 GET     /login                              controllers.Application.login()
 POST    /login                              controllers.Application.authenticate()
 GET     /register                           controllers.Application.register()
@@ -12,6 +16,7 @@ POST    /register                           controllers.Application.registerPost
 #task 
 
 GET    /projects/:project/tasks            controllers.Tasks.getByProject(project: Long)
+GET    /projects/all/tasks            		controllers.Tasks.getAll()
 POST	/projects/:project/tasks			controllers.Tasks.add(project: Long)
 
 #project

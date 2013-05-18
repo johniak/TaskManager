@@ -24,7 +24,6 @@ public class Secured extends Security.Authenticator {
     	return false;
     }
     public static User getUser(){
-    	System.out.println(Context.current().request().username()+User.find.all().get(1));
     	return User.find.where().eq("username", Context.current().request().username()).findUnique();
     }
 }

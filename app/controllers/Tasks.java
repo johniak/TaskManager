@@ -39,6 +39,7 @@ public class Tasks extends Controller {
 	
 
 	public static Result add(Long project) {
+		System.out.println(project);
 		User user = Secured.getUser();
 		if (!Secured.isOwnerOfProject(project, user.id)) {
 			return forbidden();
@@ -52,13 +53,27 @@ public class Tasks extends Controller {
 			task = new Task(user, Project.find.ref(project), taskForm.get().priority, taskForm.get().message, taskForm.get().status, new Date(), new Date(),
 					new SimpleDateFormat("dd/mm/yyyy").parse(taskForm.get().deadline));
 			task.save();
-			JsonNode result = Json.toJson(Boolean.TRUE);
+
+			JsonNode result = Json.toJson(new TaskSafe(task.id, task.project.id, task.priority, task.message, task.status,new SimpleDateFormat("MM/dd/yyyy").format(task.deadline)));
 			return ok(result);
 		} catch (ParseException e) {
 			JsonNode result = Json.toJson(Boolean.FALSE);
 			return ok(result);
 		}
 	}
+
+	public static Result getAll() {
+		User user = Secured.getUser();
+
+		List<Task> tasks= Task.findAll(user.id);
+		List<TaskSafe> tasksSafe= new ArrayList<TaskSafe>();
+		for(Task t : tasks){
+			tasksSafe.add(new TaskSafe(t.id, t.project.id, t.priority, t.message, t.status,new SimpleDateFormat("MM/dd/yyyy").format(t.deadline)));
+		}
+		JsonNode result = Json.toJson(tasksSafe);
+		return ok(result);
+	}
+
 	public static Result getByProject(Long project) {
 		User user = Secured.getUser();
 		if (!Secured.isOwnerOfProject(project, user.id)) {
@@ -67,7 +82,7 @@ public class Tasks extends Controller {
 		List<Task> tasks= Task.findByProject(project);
 		List<TaskSafe> tasksSafe= new ArrayList<TaskSafe>();
 		for(Task t : tasks){
-			tasksSafe.add(new TaskSafe(t.project.id, t.priority, t.message, t.status,new SimpleDateFormat("MM/dd/yyyy").format(t.deadline)));
+			tasksSafe.add(new TaskSafe(t.id, t.project.id, t.priority, t.message, t.status,new SimpleDateFormat("MM/dd/yyyy").format(t.deadline)));
 		}
 		JsonNode result = Json.toJson(tasksSafe);
 		return ok(result);
@@ -87,7 +102,8 @@ class TaskSafe{
 
 	public String deadline;
 
-	public TaskSafe(Long project, int priority, String message, int status, String deadline) {
+	public TaskSafe(Long id, Long project, int priority, String message, int status, String deadline) {
+		this.id = id;
 		this.project = project;
 		this.priority = priority;
 		this.message = message;

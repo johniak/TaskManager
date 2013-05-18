@@ -25,8 +25,6 @@ public class Projects extends Controller {
 	public static class ProjectForm {
 		public String name;
 	}
-	
-
 
 	public static Result add() {
 		User user = Secured.getUser();
@@ -36,8 +34,14 @@ public class Projects extends Controller {
 		}
 		Project project = new Project(projectForm.get().name, user);
 		project.save();
-		JsonNode result = Json.toJson(Boolean.TRUE);
+		
+		JsonNode result = Json.toJson(new ProjectSafe(project.id,project.name,project.user.id));
 		return ok(result);
+	}
+
+	public static List<Project> getUserProjects() {
+		User user = Secured.getUser();
+		return Project.getAllProjectsByUserId(user.id);
 	}
 
 	public static Result getAll() {

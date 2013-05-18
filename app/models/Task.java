@@ -66,8 +66,8 @@ public class Task extends Model {
 	/**
 	 * Retrieve todo tasks for the user.
 	 */
-	public static List<Task> findTodoInvolving(String user) {
-		return find.fetch("project").where().eq("status",Task.STATUS_DONE).eq("user.id", user).findList();
+	public static List<Task> findAll(Long user_id) {
+		return Task.find.where().eq("status",Task.STATUS_WAITING).eq("user.id", user_id).findList();
 	}
 
 	/**
