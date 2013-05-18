@@ -35,7 +35,7 @@ var priority = {
 
 		toggleStatus: function() {
 			this.save({
-				status: !this.get('status')
+				status: this.get('status')==1?0:1
 			});
 		}
 

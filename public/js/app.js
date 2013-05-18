@@ -1,7 +1,7 @@
 var app = app || {};
 
 $(function() {
-	$("#date").datepicker({format: 'mm/dd/yyyy'});
+	$("#date").datepicker({format: 'dd/mm/yyyy'});
 	$('#priority button.btn:eq(0)').addClass('active');
 
 	// add project - display modal

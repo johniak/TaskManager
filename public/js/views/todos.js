@@ -25,7 +25,7 @@ $(function() {
 
 		initialize: function() {
 			this.listenTo(this.model, 'change', this.render);
-			this.listenTo(this.model, 'destroy', this.clear);
+			//this.listenTo(this.model, 'destroy', this.clear);
 		},
 
 		// Re-render the titles of the todo item.
@@ -54,8 +54,9 @@ $(function() {
 		},
 
 		// Remove the item, destroy the model from *localStorage* and delete its view.
-		clear: function() {
-			this.model.destroy();
+		destroy: function(options) {
+		   Backbone.Model.prototype.destroy.apply(this.model, options);       
+		   this.remove();
 		}
 	});
 });

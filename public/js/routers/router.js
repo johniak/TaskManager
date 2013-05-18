@@ -21,7 +21,9 @@ var appView = null;
     app.TodoRouter.on('route:getTask', function (id) {
         requirejs(["/assets/js/views/app.js"], function() {
             appView = new app.AppView(function(appView) {
-                var model = app.Todos.getItem(id)[0];
+                var list = app.Todos.getItem(id);
+                if(list.length == 0) return;
+                var model = list[0];
                 appView.select(model.toJSON(), model.view);
             });
         });
@@ -33,6 +35,4 @@ var appView = null;
     });
 
 	Backbone.history.start();
-    //appView = new app.AppView();
-
 }());

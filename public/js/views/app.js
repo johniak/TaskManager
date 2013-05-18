@@ -64,7 +64,7 @@ $(function( $ ) {
 		},
 
 		deleteSelected: function() {
-			this.selected.clear();
+			this.selected.destroy();
 			this.closeDetails();
 		},
 
@@ -128,7 +128,7 @@ $(function( $ ) {
 		    t.setHours(0, 0, 0, 0);
 		    t.setDate(today.getDate() + 1);
 
-		    var date_string = (t.getMonth()+1)+"/"+t.getDate()+"/"+t.getFullYear();
+		    var date_string = t.getDate()+"/"+(t.getMonth()+1)+"/"+t.getFullYear();
 
 			app.Todos.create( {
 				message: this.input.val(),
