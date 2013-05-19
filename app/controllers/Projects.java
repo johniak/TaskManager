@@ -48,6 +48,11 @@ public class Projects extends Controller {
 
 	public static Result getAll() {
 
+		if(request().getQueryString("login")!=null&&request().getQueryString("password")!=null){
+			if(User.authenticate(request().getQueryString("login"), request().getQueryString("password")) == null){
+				return forbidden();
+			}
+		}
 		User user = Secured.getUser();
 		List<ProjectDisplay> projects = Project.getAllProjectsByUserId(user.id);
 
