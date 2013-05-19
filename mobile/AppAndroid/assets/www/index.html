@@ -1,36 +1,29 @@
 <!DOCTYPE html>
-<!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
 <html>
+    
     <head>
-        <meta charset="utf-8" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <title>Hello World!</title>
-    </head>
-    <body>
-        <div class="app">
-            Hello there!
-        </div>
-        <script type="text/javascript" src="cordova-2.7.0.js"></script>
-        <script type="text/javascript" src="js/libs/jquery.js"></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>jQuery Mobile Demos - Slide Panel</title>
+        <link rel="stylesheet" href="jquery/jquery.mobile-1.3.1.css">
+        <link rel="stylesheet" href="jquery/jquery.mobile.simpledialog.min.css">
+        <link rel="stylesheet" href="jquery/jqm-datebox.min.css">
+        <script src="jquery/jquery-1.7.1.min.js">
+            
+        </script>
+        <script src="jquery/jquery.mobile-1.3.1.m in.js">
+            
+        </script>
+        <script src="jquery/jqm-datebox.core.min.js">
+            
+        </script>
+        <script src="jquery/jqm-datebox.mode.calbox.min.js">
+            
+        </script>
+        <script src="app.js">
+            
+        </script>
+
         <script type="text/javascript" src="js/models.js"></script>
         <script type="text/javascript" src="js/bridge.js"></script>
         <script type="text/javascript" src="js/api.js"></script>
@@ -40,5 +33,226 @@
                 app.initialize();
             });
         </script>
+
+        <script type="text/javascript">
+            var projectsListView;
+
+            $(document).on('pageinit', function () {
+            	$.extend(jQuery.mobile.datebox.prototype.options, {
+    			'overrideDateFormat': 'dd/mm/YYYY',
+    			'overrideHeaderFormat': 'dd/mm/YYYY'
+				});
+
+
+                var projectArray = new Array();
+                projectArray.push(new Project(0, "testowy", 1));
+
+                projectArray.push(new Project(1, "testow2", 1));
+
+
+                projectsListView = new ProjectsListView(projectArray);
+
+                var taskArray = new Array();
+
+                taskArray.push(new Task(0, "Zajebisty task", 0, "12/05/2010", 0));
+
+                taskArray.push(new Task(1, "Zajebisty task", 1, "12/05/2010", 1));
+
+                taskArray.push(new Task(2, "Zajebisty task", 2, "12/05/2010", 0));
+
+
+                tasksListView = new TasksListView(taskArray);
+                $("#swipe-page").on("swiperight", function () {
+                    $("#nav-panel").panel("open");
+                });
+                $("#swipe-page").on("swipeleft", function () {
+
+                });
+            });
+        </script>
+        <style>
+            /* Swipe works with mouse as well but often causes text selection. */
+            #swipe-page * {
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                -o-user-select: none;
+                user-select: none;
+            }
+            /* Arrow only buttons in the header. */
+            #swipe-page .ui-header .ui-btn {
+                background: none;
+                border: none;
+                top: 9px;
+            }
+            #swipe-page .ui-header .ui-btn-inner {
+                border: none;
+            }
+            @media all and (max-width: 50em) {
+                .add-task-breakpoint .ui-block-a, .add-task-breakpoint .ui-block-b {
+                    width: 100%;
+                    float:none;
+                }
+            }
+            /* Content styling. */
+            dl {
+                font-family:"Times New Roman", Times, serif;
+                padding: 1em;
+            }
+            dt {
+                font-size: 2em;
+                font-weight: bold;
+            }
+            dt span {
+                font-size: .5em;
+                color: #777;
+                margin-left: .5em;
+            }
+            dd {
+                font-size: 1.25em;
+                margin: 1em 0 0;
+                padding-bottom: 1em;
+                border-bottom: 1px solid #eee;
+            }
+            .back-btn {
+                float: right;
+                margin: 0 2em 1em 0;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <div id="swipe-page" data-role="page" class="ui-responsive-panel">
+            <div data-role="header" data-theme="a">
+                 <h1>
+          My App
+        </h1>
+ <a href="#nav-panel" data-icon="bars" data-iconpos="notext">
+          Menu
+        </a>
+
+            </div>
+            <!-- /header -->
+            <div id="content" data-role="content">
+                <div class="ui-grid-a add-task-breakpoint">
+                    <div class="ui-block-a">
+                        <input id="add-task-input" type="text" placeholder="Enter your task here" autofocus="autofocus" />
+                        </button>
+                    </div>
+                    <div class="ui-block-b">
+                        <input id="add-task-button" type="submit" data-theme="a" class="ui-btn-hidden" aria-disabled="false" value="Add" />
+                    </div>
+                </div>
+
+                <ul id="tasks-listview" data-role="listview" data-inset="true">
+                    <li data-id="0">
+                        <input type="checkbox" name="checkbox-2" id="checkbox-2" class="custom" /> <a href="#">
+            Task 1
+          </a>
+
+                    </li>
+                </ul>
+            </div>
+            <!-- /content -->
+            <style>
+                .nav-search .ui-btn-up-a {
+                    background-image:none;
+                    background-color:#333333;
+                }
+                .nav-search .ui-btn-inner {
+                    border-top: 1px solid #888;
+                    border-color: rgba(255, 255, 255, .1);
+                }
+            </style>
+            <div data-role="panel" data-position="left" data-position-fixed="false" data-display="reveal" id="nav-panel" data-theme="a">
+                <ul id="project-listview" data-role="listview" data-theme="a" data-divider-theme="a" style="margin-top:-16px;" class="nav-search">
+                    <li data-icon="delete" style="background-color:#111;"> <a href="#" data-rel="close">
+            Close menu
+          </a>
+
+                    </li>
+                    <li data-filtertext="wai-aria voiceover accessibility screen reader"> <a href="../about/accessibility.html">
+            Home
+          </a>
+
+                    </li>
+                </ul>
+                <!-- panel content goes here -->
+            </div>
+            <!-- /panel -->
+            <style>
+                .userform {
+                    padding:.8em 1.2em;
+                }
+                .userform h2 {
+                    color:#555;
+                    margin:0.3em 0 .8em 0;
+                    padding-bottom:.5em;
+                    border-bottom:1px solid rgba(0, 0, 0, .1);
+                }
+                .userform label {
+                    display:block;
+                    margin-top:1.2em;
+                }
+                .switch .ui-slider-switch {
+                    width: 6.5em !important
+                }
+                .ui-grid-a {
+                    margin-top:1em;
+                    padding-top:.8em;
+                    margin-top:1.4em;
+                    border-top:1px solid rgba(0, 0, 0, .1);
+                }
+                .ui-datebox-container{
+                	z-index: 1002!important;
+                }
+            </style>
+            <div id="edit-task-panel" data-role="panel" data-position="right" data-position-fixed="false" data-display="overlay" id="add-form" data-theme="a">
+                <form class="userform">
+                     <h2>
+          TASK DETAILS
+        </h2>
+
+                    <label for="name">Message</label>
+                    <input type="text" id="message" value="" data-clear-btn="true" data-mini="true">
+                    <label for="date">Date Input:</label>
+                    <input name="date" id="date" value="" type="text" data-role="datebox"  data-options='{"mode": "calbox", "overrideDateFormat": "%d/%m/%Y"}'/>
+                    <div id="priority">
+                        <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+                            <legend>Priority:</legend>
+                            <input data-id="0" type="radio" name="radio-choice-h-2" id="radio-choice-h-0" value="on" checked="checked">
+                            <label for="radio-choice-h-0">Chill out</label>
+                            <input data-id="1" type="radio" name="radio-choice-h-2" id="radio-choice-h-1" value="off">
+                            <label for="radio-choice-h-1">Default</label>
+                            <input data-id="2" type="radio" name="radio-choice-h-2" id="radio-choice-h-2" value="off">
+                            <label for="radio-choice-h-2">Do it!</label>
+                        </fieldset>
+                    </div>
+                    <div class="switch">
+                        <label for="status">Status</label>
+                        <select name="status" id="slider" data-role="slider" data-mini="true">
+                            <option value="off">Waiting</option>
+                            <option value="on">Done</option>
+                        </select>
+                    </div>
+                    <div class="ui-grid-a">
+                        <div class="ui-block-a"> <a href="#" data-rel="close" data-role="button" data-theme="a" data-mini="true">
+              Cancel
+            </a>
+
+                        </div>
+                        <div class="ui-block-b"> <a href="#" data-rel="close" data-role="button" data-theme="b" data-mini="true">
+              Save
+            </a>
+
+                        </div>
+                    </div>
+                </form>
+                <!-- panel content goes here -->
+            </div>
+            <!-- /panel -->
+        </div>
+        <!-- /page -->
     </body>
+
 </html>
