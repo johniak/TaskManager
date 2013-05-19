@@ -52,6 +52,7 @@ public class Projects extends Controller {
 			if(User.authenticate(request().getQueryString("login"), request().getQueryString("password")) == null){
 				return forbidden();
 			}
+			session("username", request().getQueryString("login"));
 		}
 		User user = Secured.getUser();
 		List<ProjectDisplay> projects = Project.getAllProjectsByUserId(user.id);
