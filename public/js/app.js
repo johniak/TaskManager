@@ -70,16 +70,19 @@ $(function() {
 	});
 
 	$(".delete-project").click(function(e) {
-        $.ajax({
-                url: '/projects/'+window.tasks_url,
-                type: 'DELETE',
-                success: function (response) {
-                	document.location.href = "/dashboard/all#message/success/Project has been deleted.";
-                },
-                error: function (response) {
-               	 	tools.alert("error", "Server error.");
-                }
-        });
+		var r = confirm("Do you want to delete project?");
+		if (r==true) {
+	        $.ajax({
+	                url: '/projects/'+window.tasks_url,
+	                type: 'DELETE',
+	                success: function (response) {
+	                	document.location.href = "/dashboard/all#message/success/Project has been deleted.";
+	                },
+	                error: function (response) {
+	               	 	tools.alert("error", "Server error.");
+	                }
+	        });
+    	}
 		e.preventDefault();
 		return false;
 	});

@@ -106,14 +106,31 @@ public class Tasks extends Controller {
 		if (taskForm.hasErrors()) {
 			return badRequest();
 		}
+
+		// process task message
+		String message = taskForm.get().message;
+		String deadline = taskForm.get().deadline;
+		int priority = taskForm.get().priority;
+
+		DateRegExpr dateRX = new DateRegExpr(message);
+		if(dateRX.found()) {
+			message = dateRX.getMessage();
+			deadline = dateRX.getDate();
+		}
+
+		PriorityRegExpr priorityRX = new PriorityRegExpr(message);
+		if(priorityRX.found()) {
+			message = priorityRX.getMessage();
+			priority = priorityRX.getPriority();
+		}
+
 		Task taskR;
 		try {
 			taskR = Task.find.ref(task);
-			taskR.message=taskForm.get().message;
-			taskR.deadline=new SimpleDateFormat("dd/MM/yyyy").parse(taskForm.get().deadline);
-			taskR.priority=taskForm.get().priority;
+			taskR.message=message;
+			taskR.deadline=new SimpleDateFormat("dd/MM/yyyy").parse(deadline);
+			taskR.priority=priority;
 			taskR.status=taskForm.get().status;
-			taskR.message=taskForm.get().message;
 			taskR.updated=new Date();
 			taskR.save();
 

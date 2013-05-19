@@ -79,11 +79,11 @@ $(function( $ ) {
 				}, error: function() {
 					tools.alert("error", "Server error.");
 			}});
-			this.closeDetails();
 
 			app.Todos.sort();
 			appView.addAll();
 
+			this.closeDetails();
 		},
 
 		select: function( data, item ) {

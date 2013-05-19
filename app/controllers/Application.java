@@ -3,6 +3,7 @@ package controllers;
 import static play.data.Form.form;
 
 import java.util.Date;
+import java.util.List;
 
 import controllers.Projects.ProjectForm;
 import models.Project;
@@ -182,7 +183,8 @@ public class Application extends Controller {
 	@Security.Authenticated(Secured.class)
 	public static Result dashboardDisplay(Integer project_id, String global) {
 		User logged_user = User.findByUsername(request().username());
+		List<ProjectDisplay> projects = Projects.getUserProjects();
 
-		return ok(dashboard.render(logged_user, Projects.getUserProjects(), project_id, global));
+		return ok(dashboard.render(logged_user, projects, project_id, global, projects.size()>1));
 	}
 }

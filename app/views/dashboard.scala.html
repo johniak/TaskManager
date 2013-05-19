@@ -1,4 +1,4 @@
-@(user: User, projects: List[views.html.helper.ProjectDisplay], selected_project: Integer, global: String)
+@(user: User, projects: List[views.html.helper.ProjectDisplay], selected_project: Integer, global: String, can_delete: Boolean)
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -119,7 +119,7 @@
                 <ul id="task-list">
 
                 </ul>
-                @if(selected_project != null) {
+                @if(selected_project != null && can_delete) {
                 <div class="delete-project-div">
                     <a  href="#" class="delete-project"><i class="icon-trash"> </i> Delete project</a>
                 </div>
