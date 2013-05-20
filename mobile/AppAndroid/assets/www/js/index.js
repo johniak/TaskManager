@@ -48,17 +48,18 @@ var app = {
 
         api.getProjects(function (projects) {
             app.projectsListView = new ProjectsListView(projects);
-        });
-
-        api.getTasks(app.projectsListView.projectsArray[0].id, function (tasks) {
-            console.log("nice first taks!");
-            app.tasksListView = new ProjectsListView(tasks);
-            // edit task
-            tasks[0].message = "edited";
-            api.putTask(tasks[0], function (synced_with_server, object) {
-                console.log("synced_with_server=" + synced_with_server);
+            api.getTasks(app.projectsListView.projectsArray[0].id, function (tasks) {
+                console.log("nice first taks!");
+                app.tasksListView = new TasksListView(tasks);
+                // edit task
+                tasks[0].message = "edited";
+                api.putTask(tasks[0], function (synced_with_server, object) {
+                    console.log("synced_with_server=" + synced_with_server);
+                });
             });
         });
+        console.log("nice first taks!"+app.projectsListView.projectsArray[0]);
+
 
         var t = new Task(null, "hej!", 2, 1, "12/06/1991", 0);
         createTask(t);
