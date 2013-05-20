@@ -51,7 +51,7 @@ var app = {
         });
 
         api.getTasks(app.projectsListView.projectsArray[0].id, function (tasks) {
-
+            console.log("nice first taks!");
             app.tasksListView = new ProjectsListView(tasks);
             // edit task
             tasks[0].message = "edited";
@@ -65,7 +65,7 @@ var app = {
     },
 
     onDeviceReady: function () {
-        console.log("[nice]READY!");
+        console.log("nice READY!");
         api.login(app.login, 'test', 'test');
     }
 
