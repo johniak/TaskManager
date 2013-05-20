@@ -18,46 +18,45 @@
  */
 var app = {
 
-    initialize: function() {
+    initialize: function () {
         this.bindEvents();
         api.initialize();
     },
 
-    bindEvents: function() {
+    bindEvents: function () {
         document.addEventListener('deviceready', this.onDeviceReady, false);
     },
 
-    createTask: function(t) {
-        api.postTask(t, function(synced_with_server, object) {
-           console.log("synced_with_server="+synced_with_server);
-           console.log("t.id="+object.id);
-           console.log("t._id="+object._id);
+    createTask: function (t) {
+        api.postTask(t, function (synced_with_server, object) {
+            console.log("synced_with_server=" + synced_with_server);
+            console.log("t.id=" + object.id);
+            console.log("t._id=" + object._id);
         });
     },
 
-    deleteTask: function(task) {
-        api.deleteTask(task,function(synced_with_server) {
-            console.log("synced_with_server="+synced_with_server);
+    deleteTask: function (task) {
+        api.deleteTask(task, function (synced_with_server) {
+            console.log("synced_with_server=" + synced_with_server);
         });
     },
-    
-    login: function( status ) {
-        if(status == bridge.ERROR) return;
+
+    login: function (status) {
+        if (status == bridge.ERROR) return;
 
         api.syncTasks();
 
-        api.getProjects(function(projects) {
-            console.log("project="+projects.length);
+        api.getProjects(function (projects) {
+            app.projectsListView = new ProjectsListView(projects);
         });
 
-        api.getTasks(4, function(tasks) {
-            console.log("tasks="+tasks.length);
-            console.log("task[0]._id="+tasks[0]._id);
+        api.getTasks(app.projectsListView.projectsArray[0].id, function (tasks) {
 
+            app.tasksListView = new ProjectsListView(tasks);
             // edit task
             tasks[0].message = "edited";
-            api.putTask(tasks[0], function(synced_with_server, object) {
-                console.log("synced_with_server="+synced_with_server);
+            api.putTask(tasks[0], function (synced_with_server, object) {
+                console.log("synced_with_server=" + synced_with_server);
             });
         });
 
@@ -65,10 +64,10 @@ var app = {
         createTask(t);
     },
 
-    onDeviceReady: function() {
-        console.log("READY!");
+    onDeviceReady: function () {
+        console.log("[nice]READY!");
         api.login(app.login, 'test', 'test');
     }
-    
+
 
 };

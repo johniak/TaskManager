@@ -1,17 +1,4 @@
-function Project(id, name, tasks_count) {
 
-    this.id = id;
-    this.name = name;
-    this.tasks_count = tasks_count;
-}
-
-function Task(id, message, priority, deadline, status) {
-    this.id = id;
-    this.message = message;
-    this.priority = priority;
-    this.deadline = deadline;
-    this.status = status;
-}
 
 function ProjectsListView(projectsArray) {
 
@@ -28,8 +15,12 @@ function ProjectsListView(projectsArray) {
         $('#project-listview li a').click(function () {
 
             id = $(this).attr("data-id");
-            if ($.isNumeric(id))
-                console.log(projectsArray[id]);
+            if ($.isNumeric(id)){
+                api.getTasks(app.projectsListView.projectsArray[0].id, function(tasks) {
+                   app.tasksListView= new TasksListView(tasks);
+                });
+            }
+
             //console.log( projectsArray[id].name);
         });
         $('#project-listview').listview('refresh');
