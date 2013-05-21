@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1/">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scaleable=no">
     <title>jQuery Mobile Demos - Slide Panel</title>
     <link rel="stylesheet" href="jquery/jquery.mobile-1.3.1.css"/>
     <link rel="stylesheet" href="jquery/jquery.mobile.simpledialog.min.css"/>
@@ -27,7 +27,9 @@
 
     <script type="text/javascript">
         var projectsListView;
-
+        $(document).bind( "mobileinit", function(event) {
+            $.extend($.mobile.zoom, {locked:true,enabled:false});
+        });
         $(document).on('pageinit', function () {
             $.extend(jQuery.mobile.datebox.prototype.options, {
                 'overrideDateFormat': 'dd/mm/YYYY',
