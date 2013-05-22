@@ -7,18 +7,28 @@ var api = {
 
     /* 
      * login
-     * @parm callback( login_status )
+     * @parm callback( login_status - bool )
      * @parm login - optional
      * @parm password - optional
+     * api will store user data as local storage
+     * so you don't have to pass login and password every time
      */
     login: function( callback, login, password ) {
         bridge.login(this.API_URL+"login", callback, login, password)
     },
 
+    /*
+     * check user authentication status
+     * @return boolean (authentication status)
+     */
+    isAuthenticated: function() {
+        return bridge.isAuthenticated();
+    },
+
     /* 
      * getProjects
-     * send get request
-     * @parm callback - function( projects_list )
+     * get projects
+     * @parm callback - function( projects_list - Array of Projects )
      */
     getProjects: function( callback ) {
         bridge.get(
@@ -48,10 +58,18 @@ var api = {
         );
     },
 
-    syncTasks: function() {
-        bridge.sync();
+    /*
+     *
+     *
+     */
+    syncTasks: function(task_to_sync_callback, no_task_to_sync_callback) {
+        bridge.sync(task_to_sync_callback, no_task_to_sync_callback);
     },
 
+    /*
+     * internal usage only - this method was designed 
+     * to handle asynchronous database access.
+     */
     _syncListLoop: function(list, i, action, query, parms, finish) {
 
         bridge.query(query, 
@@ -69,16 +87,16 @@ var api = {
 
     /* 
      * getTasks
-     * send get request
+     * get tasks
      * @parm project_id
-     * @parm callback - function( tasks_list )
+     * @parm callback - function( tasks_list - Array of Tasks )
      */
     getTasks: function( project_id, callback ) {
         bridge.get(
             this.API_URL+"projects/"+project_id+"/tasks", "tasks", callback,
-            function(list, callback) { // sync
+            function(list, callback) { // sync with database
                 // clear database
-                bridge.query('DELETE FROM tasks WHERE project = ?', [project_id]);
+                bridge.query('DELETE FROM tasks WHERE project = ? AND sync is null', [project_id]);
                 api._syncListLoop(list, 0, function(list, i, results) {
                         list[i]._id = results.insertId;
                     },
@@ -104,13 +122,14 @@ var api = {
                     ));
                 }
                 return results;
-            }
+            },
+            'sync!="delete" or sync is null'
         );
     },
 
     /* 
      * postTask
-     * send post request
+     * send post request or store task to sync in later
      * @parm data - task object
      * @parm callback - function( synced_with_server, task_object )
      */
@@ -119,8 +138,10 @@ var api = {
             this.API_URL+"projects/"+data.project+"/tasks", "tasks", data, callback,
             function(synced_with_server, object, callback) { // sync
                 var id = (synced_with_server) ? object.id : null;
-                bridge.query('INSERT INTO tasks (id, message, project, priority, deadline, status) VALUES (?, ?, ?, ?, ?, ?)', 
-                    [ id, String(object.message), object.project, object.priority, String(object.deadline), object.status ],
+                var sync = (!synced_with_server) ? "add" : "";
+
+                bridge.query('INSERT INTO tasks (id, message, project, priority, deadline, status, sync) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+                    [ id, String(object.message), object.project, object.priority, String(object.deadline), object.status, String(sync) ],
                 function(tx, results) {
                     object._id = results.insertId;
                     callback(object);
@@ -139,8 +160,10 @@ var api = {
         bridge.put(
             this.API_URL+"projects/"+data.project+"/tasks/"+data.id, "tasks", data, callback,
             function(synced_with_server, object) { // sync
-                bridge.query('UPDATE tasks SET message = ?, priority = ?, deadline = ?, status = ? WHERE _id = ?', 
-                    [ String(object.message), object.priority, String(object.deadline), object.status, object._id ]
+                var sync = (!synced_with_server) ? "edit" : "";
+
+                bridge.query('UPDATE tasks SET message = ?, priority = ?, deadline = ?, status = ?, sync = ? WHERE _id = ?', 
+                    [ String(object.message), object.priority, String(object.deadline), object.status, String(sync), object._id ]
                 );
             }
         );
@@ -160,7 +183,8 @@ var api = {
                     // delete from local storage
                     bridge.query('DELETE tasks WHERE _id = ?', [data._id]);
                 }else{
-                    // @TODO set sync flag
+                    // set sync flag to delete
+                    bridge.query('UPDATE tasks SET sync = "delete" WHERE _id = ?', [ object._id ]);
                 }
             }
         );

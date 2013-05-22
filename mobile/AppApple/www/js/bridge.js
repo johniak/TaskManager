@@ -9,8 +9,12 @@ var bridge = {
     },
 
     initDatabase: function( tx ) {
-    	tx.executeSql('CREATE TABLE IF NOT EXISTS projects (_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, id unique, name, tasks_count)');
-    	tx.executeSql('CREATE TABLE IF NOT EXISTS tasks (_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, id unique, message, project, priority, deadline, status)');
+    	tx.executeSql('CREATE TABLE IF NOT EXISTS projects (_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, id, name, tasks_count)');
+    	tx.executeSql('CREATE TABLE IF NOT EXISTS tasks (_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, id, message, project, priority, deadline, status, sync)');
+    },
+
+    isAuthenticated: function() {
+        return window.localStorage.getItem("login") && window.localStorage.getItem("password");
     },
 
     login: function( url, callback, login, password ) {
@@ -41,16 +45,61 @@ var bridge = {
     	}
     },
 
-    sync: function() {
-    	console.log("soon");
+    sync: function(task_to_sync_callback, no_task_to_sync_callback) {
+        if( ! this.isNetworkAccess() ) return;
+
+        this.query("SELECT * FROM tasks WHERE sync is not null" , [], function(tx, results) {
+            if ( results.rows.length == 0) {
+                if(typeof no_task_to_sync_callback !== "function") return;
+                return no_task_to_sync_callback();
+            }
+
+            var list = [];
+
+            for (var i=0; i<results.rows.length; i++) {
+                list.push(new Task(
+                    results.rows.item(i).id,
+                    results.rows.item(i).message,
+                    results.rows.item(i).project,
+                    results.rows.item(i).priority,
+                    results.rows.item(i).deadline,
+                    results.rows.item(i).status,
+                    results.rows.item(i).sync
+                ));
+            }
+
+            task_to_sync_callback(list, function() {
+                // sync callback
+                for (var i=0; i<list.length; i++) {
+                    if(list[i].sync == "delete") {
+                        api.deleteTask(list[i]);
+                    }else if(list[i].sync == "add") {
+                        api.postTask(list[i], function() {
+                            // delete old one
+                            bridge.query('DELETE tasks WHERE _id = ?', [data._id]);
+                        });
+                    }else if(list[i].sync == "edit") {
+                        //@TODO
+                    }
+                }
+            }, function() {
+                // abandon callback
+                bridge.query('DELETE tasks WHERE sync is not null');
+            });
+        });
     },
 
     /*  
      * backup(object)
      * callback(object) 
      */
-    get: function(url, table_name, callback, backup, dbtolist) {
+    get: function(url, table_name, callback, backup, dbtolist, where) {
     	if(typeof callback !== "function") return;
+
+        if(typeof where === "undefined") {
+            // where is optional
+            where = "1=1";
+        }
 
     	if( this.isNetworkAccess() ) {
     		$.get(url, function(result) {
@@ -60,7 +109,7 @@ var bridge = {
     			});
     		});
     	} else {
-    		this.query("SELECT * FROM "+table_name, [], function(tx, results) {
+    		this.query("SELECT * FROM "+table_name+" WHERE "+where , [], function(tx, results) {
 				callback(dbtolist(results));
 			});
 		}

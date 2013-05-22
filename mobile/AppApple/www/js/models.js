@@ -4,15 +4,13 @@ function Project(id, name, tasks_count) {
     this.tasks_count = tasks_count;
 }
 
-function Task(id, message, project, priority, deadline, status) {
+function Task(id, message, project, priority, deadline, status, sync) {
     this.id = id;
     this.project = project;
     this.message = message;
     this.priority = priority;
     this.deadline = deadline;
     this.status = status;
+    this.sync = sync;
 
-    this.setDbId = function(_id) {
-    	this._id = _id;
-    }
 }
