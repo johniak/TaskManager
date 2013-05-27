@@ -41,20 +41,20 @@ var app = {
         });
     },
 
-    readyToGo: function() {
+    readyToGo: function () {
         console.log("clear, we can start");
     },
 
     login: function (status) {
         if (status == bridge.ERROR) return;
 
-        api.syncTasks(function(list, sync, abandon) {
+        api.syncTasks(function (list, sync, abandon) {
             navigator.notification.confirm(
                 'Application found unsynced data. Do you want to sync data to server?',  // message
-                function(button) {
-                    if(button == 1) {
+                function (button) {
+                    if (button == 1) {
                         sync();
-                    }else{
+                    } else {
                         abandon();
                     }
                 },
@@ -65,15 +65,15 @@ var app = {
 
         api.getProjects(function (projects) {
             app.projectsListView = new ProjectsListView(projects);
-        });
+            api.getTasks(app.projectsListView.projectsArray[0].id, function (tasks) {
+                app.tasksListView = new TasksListView(tasks);
 
-        api.getTasks(app.projectsListView.projectsArray[0].id, function (tasks) {
-            console.log("nice first taks!");
-            app.tasksListView = new ProjectsListView(tasks);
-            // edit task
-            tasks[0].message = "edited";
-            api.putTask(tasks[0], function (synced_with_server, object) {
-                console.log("synced_with_server=" + synced_with_server);
+
+                // edit task
+                tasks[0].message = "edited";
+                api.putTask(tasks[0], function (synced_with_server, object) {
+                    console.log("synced_with_server=" + synced_with_server);
+                });
             });
         });
 
@@ -84,7 +84,45 @@ var app = {
     onDeviceReady: function () {
         console.log("nice READY!");
         api.login(app.login, 'test', 'test');
-    }
+        $("#update-button").click(app.onUpdateButtonClicked);
+        $("#add-task-button").click(app.onAddTaskButton);
+    },
 
+    onUpdateButtonClicked: function () {
+      //  alert($("#message").val());
+       // alert($('#slider').val());
+       // alert($("#priority-selector label[data-icon=radio-on]").attr("data-id"));
+      //  alert($("#date").val());
+        alert(app.tasksListView.tasksArray[app.tasksListView.selectedId].message);
+        var id=app.tasksListView.selectedId;
+        app.tasksListView.tasksArray[id].message= $("#message").val();
+        app.tasksListView.tasksArray[id].deadline= $("#date").val();
+        app.tasksListView.tasksArray[id].priority= $("#priority-selector label[data-icon=radio-on]").attr("data-id");
+        app.tasksListView.tasksArray[id].status= $('#slider').val()=="on"?1:0;
+        api.putTask(app.tasksListView.tasksArray[app.tasksListView.selectedId], function (synced_with_server, object) {
+            api.getTasks(app.tasksListView.tasksArray[app.tasksListView.selectedId].project, function (tasks) {
+                app.tasksListView = new TasksListView(tasks);
+            });
+        });
+    },
+    onAddTaskButton: function(){
+
+        var data = new Task();
+        data.message=$("#add-task-input").val();
+        data.priority=1;
+        data.status=0;
+        var date= new Date();
+        data.dedline=  date.getDay().toString()+"/"+date.getMonth().toString()+"/"+date.getFullYear().toString();
+        data.project=app.projectsListView.projectsArray[app.projectsListView.selectedId].id;
+
+
+        api.postTask(data, function (synced_with_server, object) {
+
+            api.getTasks(data.project, function (tasks) {
+                alert($.datepicker.formatDate('yy-mm-dd', new Date()));
+                app.tasksListView = new TasksListView(tasks);
+            });
+        });
+    }
 
 };
