@@ -46,10 +46,12 @@ var bridge = {
     },
 
     sync: function(task_to_sync_callback, no_task_to_sync_callback) {
+
         if( ! this.isNetworkAccess() ) return;
 
         this.query("SELECT * FROM tasks WHERE sync is not null" , [], function(tx, results) {
             if ( results.rows.length == 0) {
+
                 if(typeof no_task_to_sync_callback !== "function") return;
                 return no_task_to_sync_callback();
             }
@@ -57,7 +59,7 @@ var bridge = {
             var list = [];
 
             for (var i=0; i<results.rows.length; i++) {
-                list.push(new Task(
+                var task = new Task(
                     results.rows.item(i).id,
                     results.rows.item(i).message,
                     results.rows.item(i).project,
@@ -65,26 +67,40 @@ var bridge = {
                     results.rows.item(i).deadline,
                     results.rows.item(i).status,
                     results.rows.item(i).sync
-                ));
+                );
+                task._id = results.rows.item(i)._id;
+                list.push(task);
             }
 
-            task_to_sync_callback(list, function() {
+            task_to_sync_callback(list, function(list, callback) {
                 // sync callback
                 for (var i=0; i<list.length; i++) {
                     if(list[i].sync == "delete") {
-                        api.deleteTask(list[i]);
-                    }else if(list[i].sync == "add") {
-                        api.postTask(list[i], function() {
+                        api.deleteTask(list[i], function(sync_with_server, object) {
+                            if(!sync_with_server) return;
                             // delete old one
-                            bridge.query('DELETE tasks WHERE _id = ?', [data._id]);
+                            bridge.query('DELETE FROM tasks WHERE _id = _id = ' + object._id +'; ');
+                        });
+                    }else if(list[i].sync == "add") {
+                        var old_one = list[i];
+                        api.postTask(list[i], function(sync_with_server, object) {
+                            if(!sync_with_server) return;
+                            // delete old one
+                            bridge.query('DELETE FROM tasks WHERE _id = ' + old_one._id +'; ');
                         });
                     }else if(list[i].sync == "edit") {
-                        //@TODO
+                        api.putTask(list[i], function(sync_with_server, object) {
+                            if(!sync_with_server) return;
+                            // delete sync flag
+                            bridge.query('UPDATE tasks SET sync = mull WHERE _id = ' + object._id +'; ');
+                        });
                     }
                 }
-            }, function() {
+                callback();
+            }, function(list, callback) {
                 // abandon callback
                 bridge.query('DELETE tasks WHERE sync is not null');
+                callback();
             });
         });
     },
@@ -123,9 +139,10 @@ var bridge = {
     	if(typeof callback !== "function") return;
 		
 		if( this.isNetworkAccess() ) {
+            // online
     		$.post(url, data, function(result) {
     			// backup this to database
-    			backup(false, result, function(result) {
+    			backup(true, result, function(result) {
     				callback(true, result);
     			});
     		});
@@ -164,8 +181,8 @@ var bridge = {
 	        	url: url,
 	        	type: 'DELETE',
 	        	success: function (result) {
-	        		backup(true, result);
-	        		callback(true, result);
+	        		backup(true, object);
+	        		callback(true, object);
 	            }
 	        });
     	} else {

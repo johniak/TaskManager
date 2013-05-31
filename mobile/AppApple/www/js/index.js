@@ -42,27 +42,6 @@ var app = {
     },
 
     readyToGo: function () {
-        console.log("clear, we can start");
-    },
-
-    login: function (status) {
-        if (status == bridge.ERROR) return;
-
-        api.syncTasks(function (list, sync, abandon) {
-            navigator.notification.confirm(
-                'Application found unsynced data. Do you want to sync data to server?',  // message
-                function (button) {
-                    if (button == 1) {
-                        sync();
-                    } else {
-                        abandon();
-                    }
-                },
-                'Dear user!',            // title
-                'Yes,No'          // buttonLabels
-            );
-        }, this.readyToGo);
-
         api.getProjects(function (projects) {
             app.projectsListView = new ProjectsListView(projects);
             api.getTasks(app.projectsListView.projectsArray[0].id, function (tasks) {
@@ -79,6 +58,25 @@ var app = {
 
         var t = new Task(null, "hej!", 2, 1, "12/06/1991", 0);
         createTask(t);
+    },
+
+    login: function (status) {
+        if (status == bridge.ERROR) return;
+
+        api.syncTasks(function (list, sync, abandon) {
+            navigator.notification.confirm(
+                'Application found unsynced data. Do you want to sync data to server?',  // message
+                function (button) {
+                    if (button == 1) {
+                        sync(list, app.readyToGo);
+                    } else {
+                        abandon(list, app.readyToGo);
+                    }
+                },
+                'Dear user!',            // title
+                'Yes,No'          // buttonLabels
+            );
+        }, app.readyToGo);
     },
 
     onDeviceReady: function () {
