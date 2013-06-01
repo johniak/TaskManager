@@ -25,6 +25,12 @@ var api = {
         return bridge.isAuthenticated();
     },
 
+    logout: function() {
+        bridge.logout();
+        bridge.clearTasks();
+        bridge.clearProjects();
+    },
+
     /* 
      * getProjects
      * get projects

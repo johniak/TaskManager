@@ -47,13 +47,6 @@ var app = {
             app.projectsListView = new ProjectsListView(projects);
             api.getTasks(app.projectsListView.projectsArray[0].id, function (tasks) {
                 app.tasksListView = new TasksListView(tasks);
-
-
-                // edit task
-                tasks[0].message = "edited";
-                api.putTask(tasks[0], function (synced_with_server, object) {
-                    console.log("synced_with_server=" + synced_with_server);
-                });
             });
         });
     },

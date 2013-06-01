@@ -17,6 +17,19 @@ var bridge = {
         return window.localStorage.getItem("login") && window.localStorage.getItem("password");
     },
 
+    clearTasks: function() {
+        this.query('DELETE FROM tasks');
+    },
+
+    clearProjects: function() {
+        this.query('DELETE FROM projects');
+    },
+
+    logout: function() {
+        window.localStorage.removeItem("login");
+        window.localStorage.removeItem("password");
+    },
+
     login: function( url, callback, login, password ) {
     	if(typeof callback !== "function") return;
 
