@@ -108,7 +108,7 @@
 
 <body>
 <div  data-role="page" class="ui-responsive-panel">
-    <div data-role="header" data-theme="a">
+    <div data-role="header" data-position="fixed" data-theme="a">
         <h1>
             Task Manager
         </h1>
@@ -190,7 +190,7 @@
             border-color: rgba(255, 255, 255, .1);
         }
     </style>
-    <div data-role="panel" data-position="left" data-position-fixed="false" data-display="reveal" id="nav-panel"
+    <div data-role="panel" data-position="left" data-position-fixed="true" data-display="reveal" id="nav-panel"
          data-theme="a">
          <h4>Projects</h4>
         <ul id="project-listview" data-role="listview" data-theme="a" data-divider-theme="a" style="margin-top:-16px;"
@@ -234,7 +234,7 @@
             z-index: 1002 !important;
         }
     </style>
-    <div id="edit-task-panel" data-role="panel" data-position="right" data-position-fixed="false" data-display="overlay"
+    <div id="edit-task-panel" data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay"
          id="add-form" data-theme="a">
         <form class="userform">
 
