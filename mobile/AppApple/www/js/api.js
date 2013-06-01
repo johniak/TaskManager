@@ -102,7 +102,7 @@ var api = {
             this.API_URL+"projects/"+project_id+"/tasks", "tasks", callback,
             function(list, callback) { // sync with database
                 // clear database
-                bridge.query('DELETE FROM tasks WHERE project = ? AND sync is null', [project_id]);
+                bridge.query('DELETE FROM tasks WHERE project = ? AND (sync is null or sync = "")', [project_id]);
                 api._syncListLoop(list, 0, function(list, i, results) {
                         list[i]._id = results.insertId;
                     },
@@ -118,14 +118,16 @@ var api = {
             function(list) { // db to model
                 results = [];
                 for (var i=0; i<list.rows.length; i++) {
-                    results.push(new Task(
+                    var task = new Task(
                         list.rows.item(i).id,
                         list.rows.item(i).message,
                         list.rows.item(i).project,
                         list.rows.item(i).priority,
                         list.rows.item(i).deadline,
                         list.rows.item(i).status
-                    ));
+                    );
+                    task._id = list.rows.item(i)._id;
+                    results.push(task);
                 }
                 return results;
             },
@@ -165,11 +167,11 @@ var api = {
     putTask: function( data, callback ) {
         bridge.put(
             this.API_URL+"projects/"+data.project+"/tasks/"+data.id, "tasks", data, callback,
-            function(synced_with_server, object) { // sync
-                var sync = (!synced_with_server) ? "edit" : "";
+            function(synced_with_server, object, orginal) { // sync
+                var sync = (synced_with_server) ? "" : "edit";
 
                 bridge.query('UPDATE tasks SET message = ?, priority = ?, deadline = ?, status = ?, sync = ? WHERE _id = ?', 
-                    [ String(object.message), object.priority, String(object.deadline), object.status, String(sync), object._id ]
+                    [ String(object.message), object.priority, String(object.deadline), object.status, String(sync), orginal._id ]
                 );
             }
         );

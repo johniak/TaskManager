@@ -98,7 +98,6 @@ var bridge = {
                         api.postTask(list[i], function(sync_with_server, object, orginal) {
                             if(!sync_with_server) return;
                             // delete old one
-                            console.log('DELETE FROM tasks WHERE _id = ' + orginal._id +'; ');
                             bridge.query('DELETE FROM tasks WHERE _id = ' + orginal._id +'; ');
                         });
                     }else if(list[i].sync == "edit") {
@@ -179,14 +178,14 @@ var bridge = {
 	        	type: 'PUT',
 	        	data: data,
 	        	success: function (result) {
-	        		backup(true, result);
-	        		callback(true, result);
+	        		backup(true, result, data);
+	        		callback(true, result, data);
 	            }
 	        });
     	} else {
     		// @TODO set sync flag
-    		backup(false, data);
-    		callback(false, data);
+    		backup(false, data, data);
+    		callback(false, data, data);
 		}
     },
 

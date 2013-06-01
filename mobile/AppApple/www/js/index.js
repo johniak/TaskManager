@@ -87,12 +87,15 @@ var app = {
         $("#add-task-button").click(app.onAddTaskButton);
     },
 
+    onTapHold: function(event) {
+        $(event.target).attr("data-tap", 1);
+        var id = $(event.target).attr("data-id");
+        $("#popupMore p").text(app.tasksListView.tasksArray[id].message);
+        $("#popupMore").popup("open");
+        console.log("tap detected");
+    },
+
     onUpdateButtonClicked: function () {
-      //  alert($("#message").val());
-       // alert($('#slider').val());
-       // alert($("#priority-selector label[data-icon=radio-on]").attr("data-id"));
-      //  alert($("#date").val());
-        alert(app.tasksListView.tasksArray[app.tasksListView.selectedId].message);
         var id=app.tasksListView.selectedId;
         app.tasksListView.tasksArray[id].message= $("#message").val();
         app.tasksListView.tasksArray[id].deadline= $("#date").val();
@@ -111,7 +114,6 @@ var app = {
             1, date.getUTCDate()+"/"+(date.getUTCMonth()+1)+"/"+date.getUTCFullYear(), 0);
 
         api.postTask(data, function (synced_with_server, object) {
-            console.log("data.project", data.project);
             api.getTasks(data.project, function (tasks) {
                 // alert($.datepicker.formatDate('yy-mm-dd', new Date()));
                 app.tasksListView = new TasksListView(tasks);
