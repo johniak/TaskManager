@@ -103,14 +103,10 @@ var app = {
         });
     },
     onAddTaskButton: function(){
-        var data = new Task();
-        data.message=$("#add-task-input").val();
-        data.priority=1;
-        data.status=0;
-        var date= new Date();
-        data.dedline=  date.getUTCDate()+"/"+date.getUTCMonth()+"/"+date.getUTCFullYear();
-        data.project=app.projectsListView.projectsArray[app.projectsListView.selectedId].id;
+        var date = new Date();
+        var data = new Task(null, $("#add-task-input").val(), 2, 1, date.getUTCDate()+"/"+(date.getUTCMonth()+1)+"/"+date.getUTCFullYear(), 0);
 
+        alert(app.projectsListView.projectsArray[app.projectsListView.selectedId].id);
 
         api.postTask(data, function (synced_with_server, object) {
             alert(synced_with_server+"cscs");
