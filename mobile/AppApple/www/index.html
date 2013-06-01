@@ -125,6 +125,38 @@
         </a>
 
     </div>
+
+    <!-- popup login -->
+    <div data-role="popup" id="popupLogin" data-theme="a" data-overlay-theme="a" data-dismissible="false" class="ui-corner-all">
+            <form>
+                <div style="padding:10px 20px;">
+                  <h3>Please sign in</h3>
+                  <label for="un" class="ui-hidden-accessible">Username:</label>
+                  <input type="text" id="username" value="" placeholder="username" data-theme="a" />
+
+                  <label for="pw" class="ui-hidden-accessible">Password:</label>
+                  <input type="password" id="password" value="" placeholder="password" data-theme="a" />
+
+                  <button type="button" data-theme="b">Sign in</button>
+                </div>
+            </form>
+        </div>
+    <!-- END popup login -->
+
+    <!-- popup sync -->
+        <div data-role="popup" id="popupSync" data-overlay-theme="a" data-theme="c" style="max-width:400px;" data-dismissible="false" class="ui-corner-all">
+            <div data-role="header" data-theme="a" class="ui-corner-top">
+                <h1>Sync Alert!</h1>
+            </div>
+            <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+                <h3 class="ui-title">Application found unsynced data. Do you want to sync data to server?</h3>
+
+                <a href="#" data-role="button" data-inline="true" data-button-id="cancel" data-theme="c">Cancel</a>    
+                <a href="#" data-role="button" data-inline="true" data-button-id="sync" data-transition="flow" data-theme="b">Sync</a>  
+            </div>
+        </div>
+    <!-- END popup sync -->
+
     <!-- /header -->
     <div id="swipe-page" id="content" data-role="content">
         <div class="ui-grid-a add-task-breakpoint">
@@ -157,6 +189,7 @@
     </style>
     <div data-role="panel" data-position="left" data-position-fixed="false" data-display="reveal" id="nav-panel"
          data-theme="a">
+         <h4>Projects</h4>
         <ul id="project-listview" data-role="listview" data-theme="a" data-divider-theme="a" style="margin-top:-16px;"
             class="nav-search">
 
@@ -201,9 +234,6 @@
     <div id="edit-task-panel" data-role="panel" data-position="right" data-position-fixed="false" data-display="overlay"
          id="add-form" data-theme="a">
         <form class="userform">
-            <h2>
-                TASK DETAILS
-            </h2>
 
             <label for="name">Message</label>
             <input type="text" id="message" value="" data-clear-btn="true" data-mini="true">

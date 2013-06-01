@@ -47,9 +47,9 @@ var bridge = {
 
     sync: function(task_to_sync_callback, no_task_to_sync_callback) {
 
-        if( ! this.isNetworkAccess() ) return;
+        if( ! this.isNetworkAccess() ) return no_task_to_sync_callback();
 
-        this.query("SELECT * FROM tasks WHERE sync is not null" , [], function(tx, results) {
+        this.query("SELECT * FROM tasks WHERE sync is not null and sync != ''" , [], function(tx, results) {
             if ( results.rows.length == 0) {
 
                 if(typeof no_task_to_sync_callback !== "function") return;
@@ -82,11 +82,11 @@ var bridge = {
                             bridge.query('DELETE FROM tasks WHERE _id = _id = ' + object._id +'; ');
                         });
                     }else if(list[i].sync == "add") {
-                        var old_one = list[i];
-                        api.postTask(list[i], function(sync_with_server, object) {
+                        api.postTask(list[i], function(sync_with_server, object, orginal) {
                             if(!sync_with_server) return;
                             // delete old one
-                            bridge.query('DELETE FROM tasks WHERE _id = ' + old_one._id +'; ');
+                            console.log('DELETE FROM tasks WHERE _id = ' + orginal._id +'; ');
+                            bridge.query('DELETE FROM tasks WHERE _id = ' + orginal._id +'; ');
                         });
                     }else if(list[i].sync == "edit") {
                         api.putTask(list[i], function(sync_with_server, object) {
@@ -99,7 +99,7 @@ var bridge = {
                 callback();
             }, function(list, callback) {
                 // abandon callback
-                bridge.query('DELETE tasks WHERE sync is not null');
+                bridge.query('DELETE tasks WHERE sync is not null or sync = ""');
                 callback();
             });
         });
@@ -146,13 +146,13 @@ var bridge = {
                 data: data,
                 success: function (result) {
                 backup(true, result, function(result) {
-                    callback(true, result);
+                    callback(true, result, data);
                 });
                 }
             });
     	} else {
     		backup(false, data, function(data) {
-    			callback(false, data);	
+    			callback(false, data, data);	
     		});
 		}
     },

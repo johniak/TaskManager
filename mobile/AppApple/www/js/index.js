@@ -42,6 +42,7 @@ var app = {
     },
 
     readyToGo: function () {
+        console.log("Ready to go");
         api.getProjects(function (projects) {
             app.projectsListView = new ProjectsListView(projects);
             api.getTasks(app.projectsListView.projectsArray[0].id, function (tasks) {
@@ -55,32 +56,40 @@ var app = {
                 });
             });
         });
-        var t = new Task(null, "hej!", 2, 1, "12/06/1991", 0);
-        app.createTask(t);
     },
 
     login: function (status) {
+        $.mobile.loading('hide');
         if (status == bridge.ERROR) return;
 
+        $('#popupLogin').popup("close");
+
         api.syncTasks(function (list, sync, abandon) {
-            navigator.notification.confirm(
-                'Application found unsynced data. Do you want to sync data to server?',  // message
-                function (button) {
-                    if (button == 1) {
-                        sync(list, app.readyToGo);
-                    } else {
-                        abandon(list, app.readyToGo);
-                    }
-                },
-                'Dear user!',            // title
-                'Yes,No'          // buttonLabels
-            );
+            $('#popupSync').popup("open");
+            $('#popupSync a').live('click', function(e) {
+                $('#popupSync').popup("close");
+                var answer = $(this).attr('data-button-id');
+                if( answer == "sync" ) {
+                    sync(list, app.readyToGo);
+                }else{
+                    abandon(list, app.readyToGo);
+                }
+            });
         }, app.readyToGo);
     },
 
     onDeviceReady: function () {
         console.log("nice READY!");
-        api.login(app.login, 'test', 'test');
+        if ( api.isAuthenticated() ) {
+            // just login
+            api.login(app.login);
+        } else {
+            $('#popupLogin').popup("open");
+            $('#popupLogin button').live('click', function(e) {
+                $.mobile.loading('show');
+                api.login(app.login, $('#popupLogin #username').val(), $('#popupLogin #password').val());
+            });
+        }
         $("#update-button").click(app.onUpdateButtonClicked);
         $("#add-task-button").click(app.onAddTaskButton);
     },
@@ -104,12 +113,12 @@ var app = {
     },
     onAddTaskButton: function(){
         var date = new Date();
-        var data = new Task(null, $("#add-task-input").val(), 2, 1, date.getUTCDate()+"/"+(date.getUTCMonth()+1)+"/"+date.getUTCFullYear(), 0);
-
-        alert(app.projectsListView.projectsArray[app.projectsListView.selectedId].id);
+        var data = new Task(null, $("#add-task-input").val(),
+            app.projectsListView.projectsArray[app.projectsListView.selectedId].id,
+            1, date.getUTCDate()+"/"+(date.getUTCMonth()+1)+"/"+date.getUTCFullYear(), 0);
 
         api.postTask(data, function (synced_with_server, object) {
-            alert(synced_with_server+"cscs");
+            console.log("data.project", data.project);
             api.getTasks(data.project, function (tasks) {
                 // alert($.datepicker.formatDate('yy-mm-dd', new Date()));
                 app.tasksListView = new TasksListView(tasks);

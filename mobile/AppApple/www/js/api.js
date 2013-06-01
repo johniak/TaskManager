@@ -123,7 +123,7 @@ var api = {
                 }
                 return results;
             },
-            'sync!="delete" or sync is null'
+            'project = '+project_id+' and (sync!="delete" or sync is null)'
         );
     },
 
@@ -131,7 +131,7 @@ var api = {
      * postTask
      * send post request or store task to sync in later
      * @parm data - task object
-     * @parm callback - function( synced_with_server, task_object )
+     * @parm callback - function( synced_with_server, task_object, orginal_object )
      */
     postTask: function( data, callback ) {
         bridge.post(
