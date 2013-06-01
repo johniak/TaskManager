@@ -17,10 +17,13 @@ function ProjectsListView(projectsArray) {
         $('#project-listview li a').click(function () {
 
             id = $(this).attr("data-id");
+            $("#nav-panel").panel("close");
             if ($.isNumeric(id)){
                 app.projectsListView.selectedId=id;
+                $.mobile.loading('show');
                 api.getTasks(app.projectsListView.projectsArray[id].id, function(tasks) {
                              console.log(tasks.length);
+                    $.mobile.loading('hide');
                    app.tasksListView= new TasksListView(tasks);
                 });
             }
