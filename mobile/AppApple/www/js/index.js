@@ -104,20 +104,19 @@ var app = {
         });
     },
     onAddTaskButton: function(){
-
         var data = new Task();
         data.message=$("#add-task-input").val();
         data.priority=1;
         data.status=0;
         var date= new Date();
-        data.dedline=  date.getDay().toString()+"/"+date.getMonth().toString()+"/"+date.getFullYear().toString();
+        data.dedline=  date.getUTCDate()+"/"+date.getUTCMonth()+"/"+date.getUTCFullYear();
         data.project=app.projectsListView.projectsArray[app.projectsListView.selectedId].id;
 
 
         api.postTask(data, function (synced_with_server, object) {
-
+            alert(synced_with_server+"cscs");
             api.getTasks(data.project, function (tasks) {
-                alert($.datepicker.formatDate('yy-mm-dd', new Date()));
+                // alert($.datepicker.formatDate('yy-mm-dd', new Date()));
                 app.tasksListView = new TasksListView(tasks);
             });
         });
