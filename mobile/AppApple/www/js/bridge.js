@@ -140,12 +140,16 @@ var bridge = {
 		
 		if( this.isNetworkAccess() ) {
             // online
-    		$.post(url, data, function(result) {
-    			// backup this to database
-    			backup(true, result, function(result) {
-    				callback(true, result);
-    			});
-    		});
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+                success: function (result) {
+                backup(true, result, function(result) {
+                    callback(true, result);
+                });
+                }
+            });
     	} else {
     		backup(false, data, function(data) {
     			callback(false, data);	

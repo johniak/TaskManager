@@ -55,9 +55,8 @@ var app = {
                 });
             });
         });
-
         var t = new Task(null, "hej!", 2, 1, "12/06/1991", 0);
-        createTask(t);
+        app.createTask(t);
     },
 
     login: function (status) {
