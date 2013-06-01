@@ -88,11 +88,14 @@ var app = {
     },
 
     onTapHold: function(event) {
-        $(event.target).attr("data-tap", 1);
         var id = $(event.target).attr("data-id");
         $("#popupMore p").text(app.tasksListView.tasksArray[id].message);
         $("#popupMore").popup("open");
-        console.log("tap detected");
+
+        var object = $(event.target).parent().parent().parent();
+        object.removeClass("ui-btn-down-c");
+        if(!object.hasClass("ui-btn-up-c"))
+            object.addClass("ui-btn-up-c");
     },
 
     onUpdateButtonClicked: function () {

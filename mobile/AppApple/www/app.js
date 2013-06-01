@@ -46,13 +46,10 @@ function TasksListView(tasksArray) {
                 "data-id": i
             }).append(this.tasksArray[i].message)));
         }
-        
+
         $('#tasks-listview').on( 'taphold', app.onTapHold );
         $('#tasks-listview li a').click(function () {
-            if( $(this).attr("data-tap") == 1) {
-                $(this).removeAttr("data-tap");
-                return;
-            }
+
             id = $(this).attr("data-id");
             if ($.isNumeric(id)) {
 
