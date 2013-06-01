@@ -1,0 +1,1 @@
+open /Applications/Google\ Chrome\ Canary.app --args --enable-extensions --disable-web-security
