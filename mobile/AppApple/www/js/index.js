@@ -85,6 +85,7 @@ var app = {
         }
         $("#update-button").click(app.onUpdateButtonClicked);
         $("#add-task-button").click(app.onAddTaskButton);
+        $("#logout-button").click(app.onLogOut);
     },
 
     onTapHold: function(event) {
@@ -122,6 +123,11 @@ var app = {
                 app.tasksListView = new TasksListView(tasks);
             });
         });
+    },
+
+    onLogOut:function(){
+        api.logout();
+        location.reload();
     }
 
 };
