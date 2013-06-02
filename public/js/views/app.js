@@ -42,8 +42,7 @@ $(function( $ ) {
 
 		// Re-rendering the App just means refreshing the statistics -- the rest
 		// of the app doesn't change.
-		render: function() {
-		},
+		render: function() {},
 
 		addOne: function( todo ) {
 			if( !this.filter || todo.get('status') == 0) {
@@ -61,21 +60,42 @@ $(function( $ ) {
 		},
 
 		deleteSelected: function() {
+			var project = this.selected.model.get('project');
+			appView.projectCount(project, -1);
 			this.selected.destroy();
 			this.closeDetails();
 		},
 
+		projectCount: function(project, sum) {
+			var project = $(".badge[data-id="+project+"]");
+			var task_count = parseInt(project.text());
+			task_count += sum;
+			project.text(task_count);
+		},
+
 		saveSelected: function() {
+			var id = this.selected.model.get('id');
 			var message = $("#title").val();
 			var deadline = $("#date").val();
 			var priority =  $("#priority .active").attr('data-id');
+			var project = $("#project").val();
+
+			var project_change = (this.selected.model.get('project') != project);
+
+			console.log(project_change);
 
 			this.selected.model.set('message', message);
 			this.selected.model.set('deadline', deadline);
 			this.selected.model.set('priority', priority);
+			this.selected.model.set('project', project);
+
 			this.selected.model.save(null, {
 				success: function() {
-					tools.alert("success", "Your task has been saved!");
+					if( project_change && $.isNumeric(window.tasks_url) ) {
+						document.location.href = "/dashboard/"+project+"#task/"+id;
+					}else{
+						tools.alert("success", "Your task has been saved!");
+					}
 				}, error: function() {
 					tools.alert("error", "Server error.");
 			}});
@@ -111,6 +131,8 @@ $(function( $ ) {
 			$("#priority .active").removeClass('active');
 			$("#priority button[data-id="+data.priority+"]").addClass('active');
 
+			$("#project").val(data.project).selectpicker("refresh");
+
 			// display box
 			$("#details").show();
 		},
@@ -140,6 +162,7 @@ $(function( $ ) {
 				deadline: date_string
 			}, { 
 			success: function(model) {
+				appView.projectCount(window.tasks_url, 1);
 				tools.alert("success", "Your task has been saved!");
 				app.Todos.sort();
 				appView.addAll();

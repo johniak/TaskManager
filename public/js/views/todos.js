@@ -44,6 +44,10 @@ $(function() {
 		// Toggle the `"completed"` state of the model.
 		toggleCompleted: function( e ) {
 			this.model.toggleStatus();
+			if( this.model.get('status') == 0)
+				appView.projectCount(this.model.get('project'), 1);
+			else
+				appView.projectCount(this.model.get('project'), -1);
 
 			e.preventDefault();
 			return false;

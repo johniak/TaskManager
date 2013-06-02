@@ -12,8 +12,6 @@ $(function() {
 		return false;
 	});
 	
-	
-	
 	$("#add-project-modal input").keypress(function(e) {
 	    if(e.which == 13) {
 	        $("#add-project-modal-save").click();
@@ -86,6 +84,8 @@ $(function() {
 		e.preventDefault();
 		return false;
 	});
+
+	$('.selectpicker').selectpicker();
 
 	$(".display-all").click(function(e) {
 

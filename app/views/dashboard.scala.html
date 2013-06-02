@@ -12,6 +12,7 @@
     <link href="/assets/css/bootstrap.css" rel="stylesheet">
     <link href="/assets/css/style.css" rel="stylesheet">
     <link href="/assets/css/datepicker.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" media="screen" href="/assets/css/bootstrap-select.css">
 
     <style type="text/css">
         body {
@@ -97,7 +98,7 @@
                         }else{
                             <li >
                         }
-                        <a href="/dashboard/@project.id">@project.name @if(project.count>0){<span class="badge">@project.count</span>}</a></li>
+                        <a href="/dashboard/@project.id">@project.name @if(project.count>0){<span class="badge" data-id="@project.id">@project.count</span>}</a></li>
                     }
                 </ul>
                 <hr class="add-project">
@@ -144,6 +145,16 @@
     <div class="controls">
       <input id="date" class="span11" type="text" placeholder="mm/dd/rrrr">
     </div>
+  </div>
+  <div class="control-group">
+        <label class="control-label" for="date">Project</label>
+        <div class="controls">
+        <select id="project" class="selectpicker show-menu-arrow span11">
+        @for(project <- projects) {
+           <option value="@project.id">@project.name</option>
+        }
+        </select>
+        </div>
   </div>
   <div class="control-group">
     <label class="control-label" for="date">Priority</label>
@@ -234,6 +245,7 @@
 <script src="/assets/js/lib/underscore.min.js"></script>
 <script src="/assets/js/lib/bootstrap.min.js"></script>
 <script src="/assets/js/lib/bootstrap-datepicker.js"></script>
+<script src="/assets/js/lib/bootstrap-select.js"></script>
 <script src="/assets/js/lib/require.js"></script>
 
 <script src="/assets/js/tools.js"></script>

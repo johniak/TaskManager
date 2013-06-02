@@ -40,6 +40,8 @@ public class Tasks extends Controller {
 		public int status;
 
 		public String deadline;
+
+		public Integer project;
 	}
 
 	public static Result addAll() {
@@ -111,6 +113,7 @@ public class Tasks extends Controller {
 		String message = taskForm.get().message;
 		String deadline = taskForm.get().deadline;
 		int priority = taskForm.get().priority;
+		Integer projectNew = taskForm.get().project;
 
 		DateRegExpr dateRX = new DateRegExpr(message);
 		if(dateRX.found()) {
@@ -132,6 +135,10 @@ public class Tasks extends Controller {
 			taskR.priority=priority;
 			taskR.status=taskForm.get().status;
 			taskR.updated=new Date();
+
+			if ( projectNew != null ) {
+				taskR.project=Project.find.ref(Long.valueOf(projectNew));
+			}
 			taskR.save();
 
 			JsonNode result = Json.toJson(new TaskSafe(taskR.id, taskR.project.id, taskR.priority, taskR.message, taskR.status,new SimpleDateFormat("dd/MM/yyyy").format(taskR.deadline), taskR.project.name));
