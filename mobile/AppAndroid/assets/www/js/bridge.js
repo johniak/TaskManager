@@ -17,6 +17,19 @@ var bridge = {
         return window.localStorage.getItem("login") && window.localStorage.getItem("password");
     },
 
+    clearTasks: function() {
+        this.query('DELETE FROM tasks');
+    },
+
+    clearProjects: function() {
+        this.query('DELETE FROM projects');
+    },
+
+    logout: function() {
+        window.localStorage.removeItem("login");
+        window.localStorage.removeItem("password");
+    },
+
     login: function( url, callback, login, password ) {
     	if(typeof callback !== "function") return;
 
@@ -46,10 +59,12 @@ var bridge = {
     },
 
     sync: function(task_to_sync_callback, no_task_to_sync_callback) {
-        if( ! this.isNetworkAccess() ) return;
 
-        this.query("SELECT * FROM tasks WHERE sync is not null" , [], function(tx, results) {
+        if( ! this.isNetworkAccess() ) return no_task_to_sync_callback();
+
+        this.query("SELECT * FROM tasks WHERE sync is not null and sync != ''" , [], function(tx, results) {
             if ( results.rows.length == 0) {
+
                 if(typeof no_task_to_sync_callback !== "function") return;
                 return no_task_to_sync_callback();
             }
@@ -57,7 +72,7 @@ var bridge = {
             var list = [];
 
             for (var i=0; i<results.rows.length; i++) {
-                list.push(new Task(
+                var task = new Task(
                     results.rows.item(i).id,
                     results.rows.item(i).message,
                     results.rows.item(i).project,
@@ -65,26 +80,39 @@ var bridge = {
                     results.rows.item(i).deadline,
                     results.rows.item(i).status,
                     results.rows.item(i).sync
-                ));
+                );
+                task._id = results.rows.item(i)._id;
+                list.push(task);
             }
 
-            task_to_sync_callback(list, function() {
+            task_to_sync_callback(list, function(list, callback) {
                 // sync callback
                 for (var i=0; i<list.length; i++) {
                     if(list[i].sync == "delete") {
-                        api.deleteTask(list[i]);
-                    }else if(list[i].sync == "add") {
-                        api.postTask(list[i], function() {
+                        api.deleteTask(list[i], function(sync_with_server, object) {
+                            if(!sync_with_server) return;
                             // delete old one
-                            bridge.query('DELETE tasks WHERE _id = ?', [data._id]);
+                            bridge.query('DELETE FROM tasks WHERE _id = _id = ' + object._id +'; ');
+                        });
+                    }else if(list[i].sync == "add") {
+                        api.postTask(list[i], function(sync_with_server, object, orginal) {
+                            if(!sync_with_server) return;
+                            // delete old one
+                            bridge.query('DELETE FROM tasks WHERE _id = ' + orginal._id +'; ');
                         });
                     }else if(list[i].sync == "edit") {
-                        //@TODO
+                        api.putTask(list[i], function(sync_with_server, object) {
+                            if(!sync_with_server) return;
+                            // delete sync flag
+                            bridge.query('UPDATE tasks SET sync = mull WHERE _id = ' + object._id +'; ');
+                        });
                     }
                 }
-            }, function() {
+                callback();
+            }, function(list, callback) {
                 // abandon callback
-                bridge.query('DELETE tasks WHERE sync is not null');
+                bridge.query('DELETE tasks WHERE sync is not null or sync = ""');
+                callback();
             });
         });
     },
@@ -123,15 +151,20 @@ var bridge = {
     	if(typeof callback !== "function") return;
 		
 		if( this.isNetworkAccess() ) {
-    		$.post(url, data, function(result) {
-    			// backup this to database
-    			backup(false, result, function(result) {
-    				callback(true, result);
-    			});
-    		});
+            // online
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+                success: function (result) {
+                backup(true, result, function(result) {
+                    callback(true, result, data);
+                });
+                }
+            });
     	} else {
     		backup(false, data, function(data) {
-    			callback(false, data);	
+    			callback(false, data, data);	
     		});
 		}
     },
@@ -145,18 +178,18 @@ var bridge = {
 	        	type: 'PUT',
 	        	data: data,
 	        	success: function (result) {
-	        		backup(true, result);
-	        		callback(true, result);
+	        		backup(true, result, data);
+	        		callback(true, result, data);
 	            }
 	        });
     	} else {
     		// @TODO set sync flag
-    		backup(false, data);
-    		callback(false, data);
+    		backup(false, data, data);
+    		callback(false, data, data);
 		}
     },
 
-    delete: function(url, table_name, data, callback, backup) {
+    remove: function(url, table_name, data, callback, backup) {
     	if(typeof callback !== "function") return;
 		
 		if( this.isNetworkAccess() ) {
@@ -164,8 +197,8 @@ var bridge = {
 	        	url: url,
 	        	type: 'DELETE',
 	        	success: function (result) {
-	        		backup(true, result);
-	        		callback(true, result);
+	        		backup(true, data);
+	        		callback(true, data);
 	            }
 	        });
     	} else {

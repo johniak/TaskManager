@@ -41,49 +41,115 @@ var app = {
         });
     },
 
-    readyToGo: function() {
-        console.log("clear, we can start");
+    readyToGo: function () {
+        console.log("Ready to go");
+        api.getProjects(function (projects) {
+            app.projectsListView = new ProjectsListView(projects);
+            api.getTasks(app.projectsListView.projectsArray[0].id, function (tasks) {
+                app.tasksListView = new TasksListView(tasks);
+            });
+        });
     },
 
     login: function (status) {
+        $.mobile.loading('hide');
         if (status == bridge.ERROR) return;
 
-        api.syncTasks(function(list, sync, abandon) {
-            navigator.notification.confirm(
-                'Application found unsynced data. Do you want to sync data to server?',  // message
-                function(button) {
-                    if(button == 1) {
-                        sync();
-                    }else{
-                        abandon();
-                    }
-                },
-                'Dear user!',            // title
-                'Yes,No'          // buttonLabels
-            );
-        }, this.readyToGo);
+        $('#popupLogin').popup("close");
 
-        api.getProjects(function (projects) {
-            app.projectsListView = new ProjectsListView(projects);
-        });
-
-        api.getTasks(app.projectsListView.projectsArray[0].id, function (tasks) {
-            console.log("nice first taks!");
-            app.tasksListView = new ProjectsListView(tasks);
-            // edit task
-            tasks[0].message = "edited";
-            api.putTask(tasks[0], function (synced_with_server, object) {
-                console.log("synced_with_server=" + synced_with_server);
+        api.syncTasks(function (list, sync, abandon) {
+            $('#popupSync').popup("open");
+            $('#popupSync a').live('click', function (e) {
+                $('#popupSync').popup("close");
+                var answer = $(this).attr('data-button-id');
+                if (answer == "sync") {
+                    sync(list, app.readyToGo);
+                } else {
+                    abandon(list, app.readyToGo);
+                }
             });
-        });
-
-        var t = new Task(null, "hej!", 2, 1, "12/06/1991", 0);
-        createTask(t);
+        }, app.readyToGo);
     },
 
     onDeviceReady: function () {
         console.log("nice READY!");
-        api.login(app.login, 'test', 'test');
+        if (api.isAuthenticated()) {
+            // just login
+            api.login(app.login);
+        } else {
+            $('#popupLogin').popup("open");
+            $('#popupLogin button').live('click', function (e) {
+                $.mobile.loading('show');
+                api.login(app.login, $('#popupLogin #username').val(), $('#popupLogin #password').val());
+            });
+        }
+        $("#update-button").click(app.onUpdateButtonClicked);
+        $("#add-task-button").click(app.onAddTaskButton);
+        $("#logout-button").click(app.onLogOut);
+        $("#confirm-delete-button").click(app.onDeleteTask);
+
+        $("#delete-button").click(app.showDeletePupup);
+
+    },
+
+    onTapHold: function (event) {
+        var id = $(event.target).attr("data-id");
+        $("#popupMore p").text(app.tasksListView.tasksArray[id].message);
+        $("#popupMore").popup("open");
+
+        var object = $(event.target).parent().parent().parent();
+        object.removeClass("ui-btn-down-c");
+        if (!object.hasClass("ui-btn-up-c"))
+            object.addClass("ui-btn-up-c");
+    },
+
+    onUpdateButtonClicked: function () {
+        var id = app.tasksListView.selectedId;
+        app.tasksListView.tasksArray[id].message = $("#message").val();
+        app.tasksListView.tasksArray[id].deadline = $("#date").val();
+        app.tasksListView.tasksArray[id].priority = $("#priority-selector label[data-icon=radio-on]").attr("data-id");
+        app.tasksListView.tasksArray[id].status = $('#slider').val() == "on" ? 1 : 0;
+        api.putTask(app.tasksListView.tasksArray[app.tasksListView.selectedId], function (synced_with_server, object) {
+            api.getTasks(app.tasksListView.tasksArray[app.tasksListView.selectedId].project, function (tasks) {
+                app.tasksListView = new TasksListView(tasks);
+            });
+        });
+    },
+    onAddTaskButton: function () {
+        var date = new Date();
+        var data = new Task(null, $("#add-task-input").val(),
+            app.projectsListView.projectsArray[app.projectsListView.selectedId].id,
+            1, date.getUTCDate() + "/" + (date.getUTCMonth() + 1) + "/" + date.getUTCFullYear(), 0);
+
+        api.postTask(data, function (synced_with_server, object) {
+            $("#add-task-input").val("");
+            api.getTasks(data.project, function (tasks) {
+                // alert($.datepicker.formatDate('yy-mm-dd', new Date()));
+                app.tasksListView = new TasksListView(tasks);
+            });
+        });
+    },
+
+    onLogOut: function () {
+        api.logout();
+        location.reload();
+    },
+
+    onDeleteTask: function () {
+        var task = app.tasksListView.tasksArray[app.tasksListView.selectedId];
+        $.mobile.loading('show');
+        api.deleteTask(task, function (synced_with_server, object) {
+            $("#popupdel").popup("close");
+            $("#edit-task-panel").panel("close");
+
+            api.getTasks(app.tasksListView.tasksArray[app.tasksListView.selectedId].project, function (tasks) {
+                app.tasksListView = new TasksListView(tasks);
+                $.mobile.loading('hide');
+            });
+        });
+    },
+    showDeletePupup: function () {
+        $("#popupdel").popup("open");
     }
 
 

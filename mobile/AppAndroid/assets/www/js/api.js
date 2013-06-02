@@ -25,6 +25,12 @@ var api = {
         return bridge.isAuthenticated();
     },
 
+    logout: function() {
+        bridge.logout();
+        bridge.clearTasks();
+        bridge.clearProjects();
+    },
+
     /* 
      * getProjects
      * get projects
@@ -96,7 +102,7 @@ var api = {
             this.API_URL+"projects/"+project_id+"/tasks", "tasks", callback,
             function(list, callback) { // sync with database
                 // clear database
-                bridge.query('DELETE FROM tasks WHERE project = ? AND sync is null', [project_id]);
+                bridge.query('DELETE FROM tasks WHERE project = ? AND (sync is null or sync = "")', [project_id]);
                 api._syncListLoop(list, 0, function(list, i, results) {
                         list[i]._id = results.insertId;
                     },
@@ -112,18 +118,20 @@ var api = {
             function(list) { // db to model
                 results = [];
                 for (var i=0; i<list.rows.length; i++) {
-                    results.push(new Task(
+                    var task = new Task(
                         list.rows.item(i).id,
                         list.rows.item(i).message,
                         list.rows.item(i).project,
                         list.rows.item(i).priority,
                         list.rows.item(i).deadline,
                         list.rows.item(i).status
-                    ));
+                    );
+                    task._id = list.rows.item(i)._id;
+                    results.push(task);
                 }
                 return results;
             },
-            'sync!="delete" or sync is null'
+            'project = '+project_id+' and (sync!="delete" or sync is null)'
         );
     },
 
@@ -131,14 +139,14 @@ var api = {
      * postTask
      * send post request or store task to sync in later
      * @parm data - task object
-     * @parm callback - function( synced_with_server, task_object )
+     * @parm callback - function( synced_with_server, task_object, orginal_object )
      */
     postTask: function( data, callback ) {
         bridge.post(
             this.API_URL+"projects/"+data.project+"/tasks", "tasks", data, callback,
             function(synced_with_server, object, callback) { // sync
                 var id = (synced_with_server) ? object.id : null;
-                var sync = (!synced_with_server) ? "add" : "";
+                var sync = (synced_with_server) ? "" : "add";
 
                 bridge.query('INSERT INTO tasks (id, message, project, priority, deadline, status, sync) VALUES (?, ?, ?, ?, ?, ?, ?)', 
                     [ id, String(object.message), object.project, object.priority, String(object.deadline), object.status, String(sync) ],
@@ -159,11 +167,11 @@ var api = {
     putTask: function( data, callback ) {
         bridge.put(
             this.API_URL+"projects/"+data.project+"/tasks/"+data.id, "tasks", data, callback,
-            function(synced_with_server, object) { // sync
-                var sync = (!synced_with_server) ? "edit" : "";
+            function(synced_with_server, object, orginal) { // sync
+                var sync = (synced_with_server) ? "" : "edit";
 
                 bridge.query('UPDATE tasks SET message = ?, priority = ?, deadline = ?, status = ?, sync = ? WHERE _id = ?', 
-                    [ String(object.message), object.priority, String(object.deadline), object.status, String(sync), object._id ]
+                    [ String(object.message), object.priority, String(object.deadline), object.status, String(sync), orginal._id ]
                 );
             }
         );
@@ -171,12 +179,12 @@ var api = {
 
     /* 
      * deleteTask
-     * send put request
+     * send delete request
      * @parm data - task object
      * @parm callback - function( synced_with_server )
      */
     deleteTask: function( data, callback ) {
-        bridge.delete(
+        bridge.remove(
             this.API_URL+"projects/"+data.project+"/tasks/"+data.id, "tasks", data, callback,
             function(synced_with_server, object) { // sync
                 if(synced_with_server == true) {
@@ -184,7 +192,7 @@ var api = {
                     bridge.query('DELETE tasks WHERE _id = ?', [data._id]);
                 }else{
                     // set sync flag to delete
-                    bridge.query('UPDATE tasks SET sync = "delete" WHERE _id = ?', [ object._id ]);
+                    bridge.query('UPDATE tasks SET sync = "delete" WHERE _id = ?', [ data._id ]);
                 }
             }
         );
