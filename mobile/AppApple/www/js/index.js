@@ -59,12 +59,12 @@ var app = {
 
         api.syncTasks(function (list, sync, abandon) {
             $('#popupSync').popup("open");
-            $('#popupSync a').live('click', function (e) {
+            $('#popupSync a').live('click', function(e) {
                 $('#popupSync').popup("close");
                 var answer = $(this).attr('data-button-id');
-                if (answer == "sync") {
+                if( answer == "sync" ) {
                     sync(list, app.readyToGo);
-                } else {
+                }else{
                     abandon(list, app.readyToGo);
                 }
             });
@@ -73,12 +73,12 @@ var app = {
 
     onDeviceReady: function () {
         console.log("nice READY!");
-        if (api.isAuthenticated()) {
+        if ( api.isAuthenticated() ) {
             // just login
             api.login(app.login);
         } else {
             $('#popupLogin').popup("open");
-            $('#popupLogin button').live('click', function (e) {
+            $('#popupLogin button').live('click', function(e) {
                 $.mobile.loading('show');
                 api.login(app.login, $('#popupLogin #username').val(), $('#popupLogin #password').val());
             });
@@ -86,40 +86,36 @@ var app = {
         $("#update-button").click(app.onUpdateButtonClicked);
         $("#add-task-button").click(app.onAddTaskButton);
         $("#logout-button").click(app.onLogOut);
-        $("#confirm-delete-button").click(app.onDeleteTask);
-
-        $("#delete-button").click(app.showDeletePupup);
-
     },
 
-    onTapHold: function (event) {
+    onTapHold: function(event) {
         var id = $(event.target).attr("data-id");
         $("#popupMore p").text(app.tasksListView.tasksArray[id].message);
         $("#popupMore").popup("open");
 
         var object = $(event.target).parent().parent().parent();
         object.removeClass("ui-btn-down-c");
-        if (!object.hasClass("ui-btn-up-c"))
+        if(!object.hasClass("ui-btn-up-c"))
             object.addClass("ui-btn-up-c");
     },
 
     onUpdateButtonClicked: function () {
-        var id = app.tasksListView.selectedId;
-        app.tasksListView.tasksArray[id].message = $("#message").val();
-        app.tasksListView.tasksArray[id].deadline = $("#date").val();
-        app.tasksListView.tasksArray[id].priority = $("#priority-selector label[data-icon=radio-on]").attr("data-id");
-        app.tasksListView.tasksArray[id].status = $('#slider').val() == "on" ? 1 : 0;
+        var id=app.tasksListView.selectedId;
+        app.tasksListView.tasksArray[id].message= $("#message").val();
+        app.tasksListView.tasksArray[id].deadline= $("#date").val();
+        app.tasksListView.tasksArray[id].priority= $("#priority-selector label[data-icon=radio-on]").attr("data-id");
+        app.tasksListView.tasksArray[id].status= $('#slider').val()=="on"?1:0;
         api.putTask(app.tasksListView.tasksArray[app.tasksListView.selectedId], function (synced_with_server, object) {
             api.getTasks(app.tasksListView.tasksArray[app.tasksListView.selectedId].project, function (tasks) {
                 app.tasksListView = new TasksListView(tasks);
             });
         });
     },
-    onAddTaskButton: function () {
+    onAddTaskButton: function(){
         var date = new Date();
         var data = new Task(null, $("#add-task-input").val(),
             app.projectsListView.projectsArray[app.projectsListView.selectedId].id,
-            1, date.getUTCDate() + "/" + (date.getUTCMonth() + 1) + "/" + date.getUTCFullYear(), 0);
+            1, date.getUTCDate()+"/"+(date.getUTCMonth()+1)+"/"+date.getUTCFullYear(), 0);
 
         api.postTask(data, function (synced_with_server, object) {
             api.getTasks(data.project, function (tasks) {
@@ -129,20 +125,9 @@ var app = {
         });
     },
 
-    onLogOut: function () {
+    onLogOut:function(){
         api.logout();
         location.reload();
-    },
-
-    onDeleteTask: function () {
-        var task = app.tasksListView.tasksArray[app.tasksListView.selectedId];
-        api.deleteTask(task, function (tasks) {
-            alert("gg");
-        });
-    },
-    showDeletePupup: function () {
-        $("#popupdel").popup("open");
     }
-
 
 };
