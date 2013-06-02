@@ -36,6 +36,10 @@ $(function() {
 			object.display_priority_class = this.model.getPriorityClass();
 			object.display_priority_text = this.model.getPriorityText();
 
+		    var today = new Date();
+		    today.setHours(0, 0, 0, 0);
+			object.display_date_class = tools.toDate(this.model.get('deadline')) > today ? "" : "overdue";
+
 			this.$el.html( this.template( object ) );
 
 			return this;

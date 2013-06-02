@@ -219,15 +219,15 @@
 </div>
 
 <script type="text/template" id="item-template">
-    <div class="<%= status ? 'checked' : 'unchecked' %>">
+    <div class="<%= status ? 'checked' : 'unchecked' %> <%- display_date_class %>">
         <a class="status" href="#"> </a>
         <h4 class="media-heading"><%- message %></h4>
         <p>
             <% if ( !tools.isNumber(window.tasks_url) ) { %>
-                <span class="label label-inverse"><%- project_name %></span>
+                <span class="label label-project"><%- project_name %></span>
             <% } %>
             <span class="label <%- display_priority_class %>"><%- display_priority_text %></span>
-            <span class="label label-date"><%- display_deadline %></span>
+            <span class="label label-date <%- display_date_class %>"><%- display_deadline %></span>
         </p>
     </div>
 </script>
