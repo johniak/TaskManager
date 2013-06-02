@@ -107,55 +107,78 @@
 </head>
 
 <body>
-<div  data-role="page" class="ui-responsive-panel">
-    <div data-role="header" data-position="fixed" data-theme="a">
+<div data-role="page" class="ui-responsive-panel">
+    <div data-role="header" data-theme="a">
         <h1>
             Task Manager
         </h1>
         <a href="#nav-panel" data-icon="bars" data-iconpos="notext">
             Menu
         </a>
-        <a href="#logout" id="logout-button" data-icon="gear" >
+        <a href="#logout" id="logout-button" data-icon="gear">
             Logout
         </a>
 
     </div>
 
     <!-- popup login -->
-    <div data-role="popup" id="popupLogin" data-theme="a" data-overlay-theme="a" data-dismissible="false" class="ui-corner-all">
-            <form>
-                <div style="padding:10px 20px;">
-                  <h3>Please sign in</h3>
-                  <label for="un" class="ui-hidden-accessible">Username:</label>
-                  <input type="text" id="username" value="" placeholder="username" data-theme="a" />
+    <div data-role="popup" id="popupLogin" data-theme="a" data-overlay-theme="a" data-dismissible="false"
+         class="ui-corner-all">
+        <form>
+            <div style="padding:10px 20px;">
+                <h3>Please sign in</h3>
+                <label for="un" class="ui-hidden-accessible">Username:</label>
+                <input type="text" id="username" value="" placeholder="username" data-theme="a"/>
 
-                  <label for="pw" class="ui-hidden-accessible">Password:</label>
-                  <input type="password" id="password" value="" placeholder="password" data-theme="a" />
+                <label for="pw" class="ui-hidden-accessible">Password:</label>
+                <input type="password" id="password" value="" placeholder="password" data-theme="a"/>
 
-                  <button type="button" data-theme="b">Sign in</button>
-                </div>
-            </form>
-        </div>
+                <button type="button" data-theme="b">Sign in</button>
+            </div>
+        </form>
+    </div>
     <!-- END popup login -->
 
-    <!-- popup sync -->
-        <div data-role="popup" id="popupSync" data-overlay-theme="a" data-theme="c" style="max-width:400px;" data-dismissible="false" class="ui-corner-all">
-            <div data-role="header" data-theme="a" class="ui-corner-top">
-                <h1>Sync Alert!</h1>
-            </div>
-            <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-                <h3 class="ui-title">Application found unsynced data. Do you want to sync data to server?</h3>
 
-                <a href="#" data-role="button" data-inline="true" data-button-id="cancel" data-theme="c">Cancel</a>    
-                <a href="#" data-role="button" data-inline="true" data-button-id="sync" data-transition="flow" data-theme="b">Sync</a>  
-            </div>
+    <!-- popup sync -->
+    <div data-role="popup" id="popupSync" data-overlay-theme="a" data-theme="c" style="max-width:400px;"
+         data-dismissible="false" class="ui-corner-all">
+        <div data-role="header" data-theme="a" class="ui-corner-top">
+            <h1>Sync Alert!</h1>
         </div>
+        <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+            <h3 class="ui-title">Application found unsynced data. Do you want to sync data to server?</h3>
+
+            <a href="#" data-role="button" data-inline="true" data-button-id="cancel" data-theme="c">Cancel</a>
+            <a href="#" data-role="button" data-inline="true" data-button-id="sync" data-transition="flow"
+               data-theme="b">Sync</a>
+        </div>
+    </div>
     <!-- END popup sync -->
 
+    <!-- popup delete-task -->
+    <div data-role="popup" id="popupdel" data-overlay-theme="a" data-theme="c" style="max-width:400px;"
+         data-dismissible="false" class="ui-corner-all">
+        <div data-role="header" data-theme="a" class="ui-corner-top">
+            <h1>Delete Alert!</h1>
+        </div>
+        <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+            <h3 class="ui-title">If You want to delete task click confirm.?</h3>
+
+            <a href="#" data-role="button" data-inline="true" data-button-id="cancel" data-theme="c">Cancel</a>
+            <a href="#" data-role="button" data-inline="true" data-button-id="confirm" id="confirm-delete-button"
+               data-transition="flow" data-theme="b">Confirm</a>
+        </div>
+    </div>
+    <!-- END delete-task -->
+
     <!-- popup READMORE -->
-    <div data-role="popup" data-dismissible="false" data-overlay-theme="a" id="popupMore" class="ui-content" data-theme="e" data-transition="pop" style="max-width:350px;">
-        <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
-          <p></p>
+    <div data-role="popup" data-dismissible="false" data-overlay-theme="a" id="popupMore" class="ui-content"
+         data-theme="e" data-transition="pop" style="max-width:350px;">
+        <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext"
+           class="ui-btn-right">Close</a>
+
+        <p></p>
     </div>
     <!-- END popup READMORE -->
 
@@ -190,9 +213,9 @@
             border-color: rgba(255, 255, 255, .1);
         }
     </style>
-    <div data-role="panel" data-position="left" data-position-fixed="true" data-display="reveal" id="nav-panel"
+    <div data-role="panel" data-position="left" data-position-fixed="false" data-display="reveal" id="nav-panel"
          data-theme="a">
-         <h4>Projects</h4>
+        <h4>Projects</h4>
         <ul id="project-listview" data-role="listview" data-theme="a" data-divider-theme="a" style="margin-top:-16px;"
             class="nav-search">
 
@@ -234,7 +257,7 @@
             z-index: 1002 !important;
         }
     </style>
-    <div id="edit-task-panel" data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay"
+    <div id="edit-task-panel" data-role="panel" data-position="right" data-position-fixed="false" data-display="overlay"
          id="add-form" data-theme="a">
         <form class="userform">
 
@@ -276,6 +299,8 @@
 
                 </div>
             </div>
+            <a href="#delete" data-role="button" data-icon="delete" data-iconpos="left" data-mini="true"
+               data-inline="true" id="delete-button">Delete</a>
         </form>
         <!-- panel content goes here -->
     </div>
