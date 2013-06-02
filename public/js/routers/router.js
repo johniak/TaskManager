@@ -1,7 +1,9 @@
 var app = app || {};
 var appView = null;
 
-var requirejs = require('/assets/js/lib/require');
+requirejs.config({
+    baseUrl: '/assets/js/views/'
+});
 
 (function() {
 	'use strict';
@@ -22,7 +24,7 @@ var requirejs = require('/assets/js/lib/require');
 	app.TodoRouter = new AppRouter();
 
     app.TodoRouter.on('route:getTask', function (id) {
-        requirejs(["/assets/js/views/app.js"], function() {
+        requirejs(["app"], function() {
             appView = new app.AppView(function(appView) {
                 var list = app.Todos.getItem(id);
                 if(list.length == 0) return;
@@ -37,13 +39,13 @@ var requirejs = require('/assets/js/lib/require');
             tools.alert(type, message);
             document.location.hash = "";
         }
-        requirejs(["/assets/js/views/app.js"], function() {
+        requirejs(["app"], function() {
             appView = new app.AppView();
         });
     });
 
     app.TodoRouter.on('route:defaultRoute', function (actions) {
-        requirejs(["/assets/js/views/app.js"], function() {
+        requirejs(["app"], function() {
             appView = new app.AppView();
         });
     });
