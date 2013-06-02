@@ -1,6 +1,8 @@
 var app = app || {};
 var appView = null;
 
+var requirejs = require('/assets/js/lib/requirejs');
+
 (function() {
 	'use strict';
 
