@@ -137,6 +137,9 @@ public class Application extends Controller {
 	}
 
 	public static Result index() {
+		if( session().get("username") != null ) {
+			return redirect(routes.Application.dashboard());
+		}
 		return ok(index.render());
 	}
 
