@@ -151,7 +151,21 @@
             </div>
         </div>
     <!-- END popup sync -->
+    <!-- popup delete-task -->
+    <div data-role="popup" id="popupdel" data-overlay-theme="a" data-theme="c" style="max-width:400px;"
+         data-dismissible="false" class="ui-corner-all">
+        <div data-role="header" data-theme="a" class="ui-corner-top">
+            <h1>Delete Alert!</h1>
+        </div>
+        <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+            <h3 class="ui-title">If You want to delete task click confirm.?</h3>
 
+            <a href="#" data-role="button" data-inline="true" data-rel="" id="cancel" data-theme="c">Cancel</a>
+            <a href="#" data-role="button" data-inline="true" data-button-id="confirm" id="confirm-delete-button"
+               data-transition="flow" data-theme="b">Confirm</a>
+        </div>
+    </div>
+    <!-- END delete-task -->
     <!-- popup READMORE -->
     <div data-role="popup" data-dismissible="false" data-overlay-theme="a" id="popupMore" class="ui-content" data-theme="e" data-transition="pop" style="max-width:350px;">
         <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
@@ -275,6 +289,8 @@
                 </a>
 
                 </div>
+                <a href="#" data-role="button" data-icon="delete" data-iconpos="left" data-mini="true"
+               data-inline="true" id="delete-button">Delete</a>
             </div>
         </form>
         <!-- panel content goes here -->
