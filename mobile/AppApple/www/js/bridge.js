@@ -189,7 +189,7 @@ var bridge = {
 		}
     },
 
-    delete: function(url, table_name, data, callback, backup) {
+    remove: function(url, table_name, data, callback, backup) {
     	if(typeof callback !== "function") return;
 		
 		if( this.isNetworkAccess() ) {
@@ -197,8 +197,8 @@ var bridge = {
 	        	url: url,
 	        	type: 'DELETE',
 	        	success: function (result) {
-	        		backup(true, object);
-	        		callback(true, object);
+	        		backup(true, data);
+	        		callback(true, data);
 	            }
 	        });
     	} else {

@@ -122,6 +122,7 @@ var app = {
             1, date.getUTCDate() + "/" + (date.getUTCMonth() + 1) + "/" + date.getUTCFullYear(), 0);
 
         api.postTask(data, function (synced_with_server, object) {
+            $("#add-task-input").val("");
             api.getTasks(data.project, function (tasks) {
                 // alert($.datepicker.formatDate('yy-mm-dd', new Date()));
                 app.tasksListView = new TasksListView(tasks);
@@ -136,8 +137,15 @@ var app = {
 
     onDeleteTask: function () {
         var task = app.tasksListView.tasksArray[app.tasksListView.selectedId];
-        api.deleteTask(task, function (tasks) {
-            alert("gg");
+        $.mobile.loading('show');
+        api.deleteTask(task, function (synced_with_server, object) {
+            $("#popupdel").popup("close");
+            $("#edit-task-panel").panel("close");
+
+            api.getTasks(app.tasksListView.tasksArray[app.tasksListView.selectedId].project, function (tasks) {
+                app.tasksListView = new TasksListView(tasks);
+                $.mobile.loading('hide');
+            });
         });
     },
     showDeletePupup: function () {

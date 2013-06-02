@@ -184,7 +184,7 @@ var api = {
      * @parm callback - function( synced_with_server )
      */
     deleteTask: function( data, callback ) {
-        bridge.delete(
+        bridge.remove(
             this.API_URL+"projects/"+data.project+"/tasks/"+data.id, "tasks", data, callback,
             function(synced_with_server, object) { // sync
                 if(synced_with_server == true) {
