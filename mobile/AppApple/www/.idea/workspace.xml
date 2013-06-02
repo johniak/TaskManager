@@ -5,7 +5,7 @@
     <ignored path="www.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/bridge.js" changelist="ca89e678-517c-4833-9b5d-b896bcc64585" time="1370189735328" ignored="false" />
-    <file path="/index.html" changelist="ca89e678-517c-4833-9b5d-b896bcc64585" time="1370190331464" ignored="false" />
+    <file path="/index.html" changelist="ca89e678-517c-4833-9b5d-b896bcc64585" time="1370191300677" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,7 +28,7 @@
       <file leaf-file-name="index.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="162" column="77" selection-start="5770" selection-end="5770" vertical-scroll-proportion="0.6432292">
+            <state line="295" column="63" selection-start="10960" selection-end="10960" vertical-scroll-proportion="0.71223956">
               <folding />
             </state>
           </provider>
@@ -37,7 +37,7 @@
       <file leaf-file-name="app.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="16" selection-start="747" selection-end="772" vertical-scroll-proportion="-6.098039">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
               <folding />
             </state>
           </provider>
@@ -46,7 +46,7 @@
       <file leaf-file-name="index.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="146" column="48" selection-start="5691" selection-end="5691" vertical-scroll-proportion="-11.568627">
+            <state line="121" column="28" selection-start="4669" selection-end="4669" vertical-scroll-proportion="-34.333332">
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -64,9 +64,9 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/js/api.js" />
         <option value="$PROJECT_DIR$/js/bridge.js" />
+        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/js/index.js" />
         <option value="$PROJECT_DIR$/index.html" />
       </list>
@@ -283,25 +283,25 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/js/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="146" column="48" selection-start="5691" selection-end="5691" vertical-scroll-proportion="-11.568627">
+        <state line="121" column="28" selection-start="4669" selection-end="4669" vertical-scroll-proportion="-34.333332">
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="16" selection-start="747" selection-end="772" vertical-scroll-proportion="-6.098039">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="162" column="77" selection-start="5770" selection-end="5770" vertical-scroll-proportion="0.6432292">
+        <state line="295" column="63" selection-start="10960" selection-end="10960" vertical-scroll-proportion="0.71223956">
           <folding />
         </state>
       </provider>
