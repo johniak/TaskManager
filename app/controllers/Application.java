@@ -101,6 +101,20 @@ public class Application extends Controller {
 	}
 
 	/**
+	 * Mobile page.
+	 */
+	public static Result mobile() {
+		return ok(mobile.render());
+	}
+
+	/**
+	 * Usage page.
+	 */
+	public static Result usage() {
+		return ok(usage.render());
+	}
+
+	/**
 	 * Handle login form submission.
 	 */
 	public static Result authenticate() {

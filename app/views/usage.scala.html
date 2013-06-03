@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Task Manager - Usage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="assets/css/datepicker.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+        .container {
+            text-align: center;
+        }
+        
+    </style>
+    <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="shortcut icon" href="assets/ico/favicon.png">
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="brand" href="/">Task Manager</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="login">Login</a></li>
+                    <li><a href="register">Register</a></li>
+                    <li class="active"><a href="/usage">Usage</a></li>
+                    <li><a href="/mobile">Mobile</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
+</div>
+
+
+    <div class="container">
+
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      <div class="hero-unit">
+
+        <div class="row">
+            <div class="span4 offset1">
+             <h3>Notification.</h3>
+             <p>Due to single-page architecture all user notification are provided via flashing popups.</p>
+             <img src="assets/img/usage_popup.png" />
+            </div>
+            <div class="span4 offset1">
+             <h3>Advance text processing.</h3>
+             <p>Application will process your input. Instead of clicking task parametrs you can type them. You can set both priority (<strong>!, !!, !!!</strong>) and dead-line (<strong>@@today, @@tomorrow, @@monday..</strong>).</p>
+             <img src="assets/img/usage_text.png" />
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="span4 offset1">
+             <h3>Project oriented.</h3>
+             <p>Assign your tasks to multiple projects. This way you can easly seperate your private and work/school work.</p>
+             <img src="assets/img/usage_list.png" />
+            </div>
+            <div class="span4 offset1">
+             <h3>We are everywhere.</h3>
+             <p>You can use our application on various range of devices. Task Manager is avaliable for both iOS and Android mobile devices. We also have single-page browser application.</p>
+            <a href="/assets/mobile/App.apk">
+                <img class="android" src="assets/img/AndroidButton_transparent.png" /></a>
+
+            <br/>
+
+            <a href="/assets/mobile/App.app">
+                <img class="ios" src="assets/img/AppleButton_transparent.png" /></a>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="span4 offset1">
+             <h3>Simple task managment.</h3>
+             <p>Set all task parms via intuitive and user-friendly editor. All in just one click. Select date using date selector, select project from drop-down list or set priority.</p>
+            </div>
+            <div class="span4 offset1">
+             <img src="assets/img/usage_edit.png" />
+            </div>
+        </div>
+      </div>
+
+
+</div><!--/.fluid-container-->
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="assets/js/lib/jquery.js"></script>
+<script src="assets/js/lib/underscore.min.js"></script>
+<script src="assets/js/lib/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(function() {
+        $("img.android").hover(function() {
+            $(this).attr("src", "assets/img/AndroidButton_transparenthover.png");
+        }, function() {
+            $(this).attr("src", "assets/img/AndroidButton_transparent.png");
+        });
+        $("img.ios").hover(function() {
+            $(this).attr("src", "assets/img/AppleButton_transparenthover.png");
+        }, function() {
+            $(this).attr("src", "assets/img/AppleButton_transparent.png");
+        });
+    });
+</script>
+</body>
+</html>
+    

@@ -11,6 +11,8 @@ GET     /dashboard/:project                 controllers.Application.dashboardPro
 GET     /login                             controllers.Application.login()
 POST    /login                              controllers.Application.authenticate()
 GET     /register                           controllers.Application.register()
+GET     /mobile	                            controllers.Application.mobile()
+GET     /usage	                            controllers.Application.usage()
 POST    /register                           controllers.Application.registerPost()
 GET		/logout								controllers.Application.logout()
 
