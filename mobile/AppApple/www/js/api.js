@@ -1,5 +1,5 @@
 var api = {
-    API_URL: "http://advanced-software.org:8090/",
+    API_URL: "http://advanced-software.org:80/",
 
 	initialize: function() {
         bridge.initialize();

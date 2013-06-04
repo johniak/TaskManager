@@ -95,6 +95,7 @@ var app = {
     onTapHold: function (event) {
         var id = $(event.target).attr("data-id");
         $("#popupMore p").text(app.tasksListView.tasksArray[id].message);
+        $("#popupMore p").append("<p>"+app.tasksListView.tasksArray[id].deadline+"</p>");
         $("#popupMore").popup("open");
 
         var object = $(event.target).parent().parent().parent();
@@ -117,6 +118,8 @@ var app = {
     },
     onAddTaskButton: function () {
         var date = new Date();
+        if($("#add-task-input").val().length<=0)
+            return;
         var data = new Task(null, $("#add-task-input").val(),
             app.projectsListView.projectsArray[app.projectsListView.selectedId].id,
             1, date.getUTCDate() + "/" + (date.getUTCMonth() + 1) + "/" + date.getUTCFullYear(), 0);
