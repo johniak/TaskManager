@@ -15,7 +15,7 @@
     <script src="jquery/jqm-datebox.core.min.js"></script>
     <script src="jquery/jqm-datebox.mode.calbox.min.js"></script>
     <script src="app.js"></script>
-    <script type="text/javascript" src="cordova-emulator.js"></script>
+    <script type="text/javascript" src="cordova-ios.js"></script>
     <script type="text/javascript" src="js/models.js"></script>
     <script type="text/javascript" src="js/bridge.js"></script>
     <script type="text/javascript" src="js/api.js"></script>
@@ -256,13 +256,13 @@
 
             <label for="name">Message</label>
             <input type="text" id="message" value="" data-clear-btn="true" data-mini="true">
-            <label for="date">Date Input:</label>
+            <label for="date">Deadline</label>
             <input name="date" id="date" value="" type="text" data-role="datebox"
                    data-options='{"mode": "calbox", "overrideDateFormat": "%d/%m/%Y"}'/>
 
             <div id="priority">
                 <fieldset id="priority-selector" data-role="controlgroup" data-type="horizontal" data-mini="true">
-                    <legend>Priority:</legend>
+                    <legend>Priority</legend>
                     <input data-id="0" type="radio" name="radio-choice-h-2" id="radio-choice-h-0" value="on"
                            checked="checked">
                     <label data-id="0" for="radio-choice-h-0">Chill out</label>
