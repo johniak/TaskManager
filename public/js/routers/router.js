@@ -2,7 +2,7 @@ var app = app || {};
 var appView = null;
 
 requirejs.config({
-    baseUrl: '/assets/js/views/'
+    baseUrl: '/assets/js/'
 });
 
 (function() {
@@ -24,7 +24,7 @@ requirejs.config({
 	app.TodoRouter = new AppRouter();
 
     app.TodoRouter.on('route:getTask', function (id) {
-        requirejs(["app"], function() {
+        requirejs(["views/app",'lib/jquery','lib/underscore.min','lib/backbone'], function() {
             appView = new app.AppView(function(appView) {
                 var list = app.Todos.getItem(id);
                 if(list.length == 0) return;
@@ -39,13 +39,13 @@ requirejs.config({
             tools.alert(type, message);
             document.location.hash = "";
         }
-        requirejs(["app"], function() {
+        requirejs(["views/app",'lib/jquery','lib/underscore.min','lib/backbone'], function() {
             appView = new app.AppView();
         });
     });
 
     app.TodoRouter.on('route:defaultRoute', function (actions) {
-        requirejs(["app"], function() {
+        requirejs(["views/app",'lib/jquery','lib/underscore.min','lib/backbone'], function() {
             appView = new app.AppView();
         });
     });
