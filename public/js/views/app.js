@@ -3,7 +3,7 @@ var app = app || {};
 $(function( $ ) {
 	'use strict';
 
-	console.log("loaded");
+	console.log("loaded view/app.js");
 	// The Application
 	// ---------------
 

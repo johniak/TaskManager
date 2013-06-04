@@ -5,7 +5,10 @@ requirejs.config({
     baseUrl: '/assets/js/'
 });
 
-(function() {
+requirejs(["views/app"],
+    function() {
+        console.log("loaded router");
+
 	'use strict';
 
 	// Todo Router
@@ -24,14 +27,12 @@ requirejs.config({
 	app.TodoRouter = new AppRouter();
 
     app.TodoRouter.on('route:getTask', function (id) {
-        requirejs(["views/app",'lib/jquery','lib/underscore.min','lib/backbone'], function() {
             appView = new app.AppView(function(appView) {
                 var list = app.Todos.getItem(id);
                 if(list.length == 0) return;
                 var model = list[0];
                 appView.select(model.toJSON(), model.view);
             });
-        });
     });
 
     app.TodoRouter.on('route:message', function (type, message) {
@@ -39,16 +40,12 @@ requirejs.config({
             tools.alert(type, message);
             document.location.hash = "";
         }
-        requirejs(["views/app",'lib/jquery','lib/underscore.min','lib/backbone'], function() {
             appView = new app.AppView();
-        });
     });
 
     app.TodoRouter.on('route:defaultRoute', function (actions) {
-        requirejs(["views/app",'lib/jquery','lib/underscore.min','lib/backbone'], function() {
             appView = new app.AppView();
-        });
     });
 
 	Backbone.history.start();
-}());
+});
