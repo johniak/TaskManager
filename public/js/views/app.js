@@ -3,7 +3,7 @@ var app = app || {};
 $(function( $ ) {
 	'use strict';
 
-	console.log("view/app.js loaded");
+	console.log("loaded");
 	// The Application
 	// ---------------
 
@@ -95,9 +95,12 @@ $(function( $ ) {
 					if( project_change && $.isNumeric(window.tasks_url) ) {
 						document.location.href = "/dashboard/"+project+"#task/"+id;
 					}else{
-
+						tools.alert("success", "Your task has been saved!");
+					}
+				}, error: function() {
 					tools.alert("error", "Server error.");
-			}});
+				}
+			});
 
 			app.Todos.sort();
 			appView.addAll();
